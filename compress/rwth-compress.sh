@@ -205,7 +205,7 @@ if [[ "$execution_mode" == "tgz" ]] ; then
 else
   [[ -n $tar_cmd ]]   && echo "'$tar_cmd'  -v -cf  '$target_tar_filename'    '$source_directory'    2>&1 || exit 63"  >> "$submitfile"
   [[ -n $zstd_cmd ]]  && echo "'$zstd_cmd' -v -9   '$target_tar_filename' -o '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
-  [[ -n $gzip_cmd ]]  && echo "'$gzip_cmd' -v -9   '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
+  [[ -n $gzip_cmd ]]  && echo "'$gzip_cmd' -v -9 < '$target_tar_filename' >  '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
   [[ -n $seven_cmd ]] && echo "'$seven_cmd' a -bb3 '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
   [[ -n $zip_cmd ]]   && echo "'$zip_cmd'     -9   '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
 fi
