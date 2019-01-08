@@ -24,7 +24,15 @@ for directory in "$git_root" "${git_root}"/* ; do
     done
     popd &> /dev/null || { echo "ERROR changing directory" ; exit 1 ; }
   else
-    printf 'Unchanged: %s.' "$directory"
+    printf 'Unchanged: %s.\n' "$directory"
   fi
 done
+
+cat <<EOF
+To apply these changes:
+  git add "$git_root"
+  git commit
+  git tag -f "$insert_version"
+  git push
+EOF
 
