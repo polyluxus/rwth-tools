@@ -22,4 +22,4 @@ If `LOGFILES` is set and a directory, the script will use it to store the logfil
 If `~/logfiles` exists (and `LOGFILES` is unset, it will use this destination.
 If neither applies, `HOME` will be the destination for logfiles.
 
-___version___: 2019-01-08-2030
+___version___: 2019-01-08-2146
