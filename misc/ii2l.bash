@@ -99,7 +99,7 @@ __default="1[2345678]:*"
 # Options
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
-  echo "___version___: 2019-01-08-2243"
+  echo "___version___: 2019-01-16-1808"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure
