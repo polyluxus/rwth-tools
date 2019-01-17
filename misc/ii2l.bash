@@ -132,7 +132,7 @@ testmode=''
 # Options
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
-  echo "___version___: 2019-01-16-1808"
+  echo "___version___: 2019-01-17-2128"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure
