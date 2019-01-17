@@ -31,7 +31,9 @@ done
 cat <<EOF
 To apply these changes:
   git add "$git_root"
-  git commit
+  git commit # to enter message interactively
+  # OR
+  git commit -m "Bump version to $insert_version"
   git tag -f "$insert_version"
   git push
 EOF
