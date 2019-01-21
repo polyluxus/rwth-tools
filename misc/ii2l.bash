@@ -24,6 +24,7 @@ isittoolate ()
   use_almost2late="@($__almost2late)"
   use_itis2late="@($__itis2late)"
   use_early="@($__early)"
+  use_coffee="@($__coffee)"
   use_morning="@($__morning)"
   use_lunch="@($__lunch)"
   use_default="@($__default)"
@@ -47,6 +48,10 @@ isittoolate ()
     $use_early)
       color="$(tput setf 3)"
       text="It is quite early: $current."
+      ;;
+    $use_coffee)
+      color="$(tput setf 5)"
+      text="Coffee? ($current)"
       ;;
     $use_morning)
       color="$(tput setf 2)"
@@ -102,6 +107,7 @@ configure ()
     write_to_file  "__almost2late='$__almost2late'"
     write_to_file  "__itis2late='$__itis2late'"
     write_to_file  "__early='$__early'"
+    write_to_file  "__coffee='$__coffee'"
     write_to_file  "__morning='$__morning'"
     write_to_file  "__lunch='$__lunch'"
     write_to_file  "__default='$__default'"
@@ -121,6 +127,7 @@ __oklate="19:*|20:*"
 __almost2late="21:*|22:*"
 __itis2late="23:*|0[012345]:*"
 __early="0[678]:*"
+__coffee="10:[12]*"
 __morning="09:*|10:*"
 __lunch="11:*"
 __default="1[2345678]:*"
@@ -132,7 +139,7 @@ testmode=''
 # Options
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
-  echo "___version___: 2019-01-17-2133"
+  echo "___version___: 2019-01-21-1058"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure
