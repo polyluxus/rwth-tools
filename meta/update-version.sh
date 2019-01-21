@@ -1,9 +1,40 @@
 #!/bin/bash
 
+if [[ $1 == -h ]] ; then
+  echo "This script fetches remote repository, checks local changes, and updates the version in those files."
+  echo "___version___: 2019-01-21-1126"
+  exit 0
+fi
+
+
+update_text="Updating"
+unchanged_text="Unchanged"
+fatal_text="ERROR"
+
+fatal ()
+{
+  echo "${fatal_text}: $*"
+  exit 1
+}
+
+if [[ $TERM =~ [Cc][Oo][Ll][Oo][Rr] ]] ; then
+  if command -v tput > /dev/null ; then 
+    color_green=$(tput setf 2)
+    color_yellow=$(tput setf 6)
+    color_red=$(tput setf 1)
+    color_default=$(tput sgr0)
+    update_text="${color_green}Updating${color_default}"
+    unchanged_text="${color_yellow}Unchanged${color_default}"
+    fatal_text="${color_red}ERROR${color_default}"
+  else
+    fatal 'No color available.'
+  fi
+fi
+
 update_file ()
 {
   [[ "$1" =~ [\*]+ ]] && return
-  printf 'Updating "%s" ... ' "$1"
+  printf '%s "%s" ... ' "$update_text" "$1"
   sed -i "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/" "$1"
   printf 'done.\n'
 }
@@ -17,14 +48,14 @@ for directory in "$git_root" "${git_root}"/* ; do
   [[ -d $directory ]] || continue
   does_differ=$( git diff "origin/$git_branch" -- "$directory" )
   if [[ -n $does_differ ]] ; then
-    pushd "$directory" || { echo "ERROR changing directory" ; exit 1 ; }
+    pushd "$directory" || fatal "ERROR changing directory"
     for file in *.sh *.bash *.md *.markdown ; do
       [[ "$file" =~ [\*]+ ]] && continue 
       update_file "$file"
     done
-    popd &> /dev/null || { echo "ERROR changing directory" ; exit 1 ; }
+    popd &> /dev/null || fatal "ERROR changing directory" 
   else
-    printf 'Unchanged: %s.\n' "$directory"
+    printf '%s: %s.\n' "$unchanged_text" "$directory"
   fi
 done
 
