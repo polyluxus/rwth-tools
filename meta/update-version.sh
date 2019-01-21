@@ -2,7 +2,7 @@
 
 if [[ $1 == -h ]] ; then
   echo "This script fetches remote repository, checks local changes, and updates the version in those files."
-  echo "___version___: 2019-01-21-1126"
+  echo "___version___: 2019-01-21-1140"
   exit 0
 fi
 
@@ -17,8 +17,12 @@ fatal ()
   exit 1
 }
 
-if [[ $TERM =~ [Cc][Oo][Ll][Oo][Rr] ]] ; then
-  if command -v tput > /dev/null ; then 
+if command -v tput > /dev/null ; then 
+  if [[ $TERM == "xterm-256color" ]] ; then
+    # Need implement different color settings for 256color terminal, 
+    # but I need to research that
+    :
+  else
     color_green=$(tput setf 2)
     color_yellow=$(tput setf 6)
     color_red=$(tput setf 1)
@@ -26,9 +30,9 @@ if [[ $TERM =~ [Cc][Oo][Ll][Oo][Rr] ]] ; then
     update_text="${color_green}Updating${color_default}"
     unchanged_text="${color_yellow}Unchanged${color_default}"
     fatal_text="${color_red}ERROR${color_default}"
-  else
-    fatal 'No color available.'
   fi
+else
+  fatal 'No color available.'
 fi
 
 update_file ()
