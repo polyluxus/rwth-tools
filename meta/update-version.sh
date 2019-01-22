@@ -2,7 +2,7 @@
 
 if [[ $1 == -h ]] ; then
   echo "This script fetches remote repository, checks local changes, and updates the version in those files."
-  echo "___version___: 2019-01-21-1140"
+  echo "___version___: 2019-01-22-2159"
   exit 0
 fi
 

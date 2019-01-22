@@ -138,7 +138,7 @@ exitstatus=0
 # Options
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
-  echo "___version___: 2019-01-21-1058"
+  echo "___version___: 2019-01-22-2159"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure

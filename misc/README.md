@@ -3,7 +3,7 @@
 This directory contains scripts which are mainly fun little scripts;
 they don't serve a particular purpose.
 
-___version___: 2019-01-21-1058
+___version___: 2019-01-22-2159
 
 ## Resources
 
