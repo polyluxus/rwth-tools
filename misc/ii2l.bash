@@ -75,7 +75,6 @@ isittoolate ()
 testfunction()
 {
   local testtime
-  testmode="true"
   for testtime in {00..23}:{0..5}0 ; do
     printf '%s  ' "$testtime"
     isittoolate "$testtime"
@@ -131,6 +130,7 @@ __morning="09:*|10:*"
 __lunch="11:*"
 __default="1[2345678]:*"
 testmode=''
+exitstatus=0
 
 # Allow for configuration file
 [[ -r "$HOME/.ii2lrc" ]] && . "$HOME/.ii2lrc"
@@ -143,17 +143,23 @@ if [[ "$1" == "-h" ]] ; then
 elif [[ "$1" == "-c" ]] ; then
   configure
 elif [[ "$1" == "test" ]] ; then
-  testfunction
+  testmode="true"
 fi
 
 # Checks
 if ! command -v tput &> /dev/null ; then
-  fatal "Command not found: tput" 
+  fatal "Command not found: tput" || (( exitstatus++ ))
 fi
 if ! tput setaf 1 &> /dev/null ; then
-  fatal "We have no support for ANSI colours, abort."
+  fatal "We have no support for ANSI colours, abort." || (( exitstatus++ ))
 fi
 
 # Execution
-isittoolate "$(date +%H:%M)" 
+if [[ "$testmode" == "true" ]] ; then
+  testfunction || (( exitstatus++ ))
+else
+  isittoolate "$(date +%H:%M)" 
+fi
+
+exit $exitstatus
 
