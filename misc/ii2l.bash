@@ -1,14 +1,13 @@
 #!/bin/bash
-# It is important to turn on extended globbing
-if shopt -p extglob > /dev/null ; then
-  :
-else
-  shopt -s extglob > /dev/null
+# It is important to turn on extended globbing 
+# otherwise the configuration with the variables doesnt work
+if ! shopt -p extglob &> /dev/null ; then
+  shopt -s extglob &> /dev/null
 fi
 
 fatal ()
 {
-  echo "ERROR: $*"
+  echo "ERROR: $*" >&2
   [[ -n $testmode ]] && return 1
   exit 1
 }
@@ -34,35 +33,35 @@ isittoolate ()
       exec 3> /dev/null
       ;;&
     $use_oklate)
-      color="$(tput setf 6)"
+      color="$(tput setaf 3)"
       text="It is late: $current."
       ;;
     $use_almost2late)
-      color="$(tput setf 5)"
+      color="$(tput setaf 5)"
       text="It is getting too late: $current."
       ;;
     $use_itis2late)
-      color="$(tput setf 4)"
+      color="$(tput setaf 1)"
       text="It is too late: $current."
       ;;
     $use_early)
-      color="$(tput setf 3)"
+      color="$(tput setaf 6)"
       text="It is quite early: $current."
       ;;
     $use_coffee)
-      color="$(tput setf 5)"
+      color="$(tput setaf 4)"
       text="Coffee? ($current)"
       ;;
     $use_morning)
-      color="$(tput setf 2)"
+      color="$(tput setaf 2)"
       text="Good morning! ($current)"
       ;;
     $use_lunch)
-      color="$(tput setf 5)"
+      color="$(tput setaf 5)"
       text="It is almost lunch ($current)!"
       ;;
     $use_default)
-      color="$(tput setf 3)"
+      color="$(tput setaf 3)"
       text="Current time: $current."
       ;;
     *)
@@ -148,10 +147,11 @@ elif [[ "$1" == "test" ]] ; then
 fi
 
 # Checks
-if command -v tput > /dev/null ; then
-  :
-else
+if ! command -v tput &> /dev/null ; then
   fatal "Command not found: tput" 
+fi
+if ! tput setaf 1 &> /dev/null ; then
+  fatal "We have no support for ANSI colours, abort."
 fi
 
 # Execution
