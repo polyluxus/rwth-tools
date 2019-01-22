@@ -52,7 +52,7 @@ for directory in "$git_root" "${git_root}"/* ; do
   [[ -d $directory ]] || continue
   does_differ=$( git diff "origin/$git_branch" -- "$directory" )
   if [[ -n $does_differ ]] ; then
-    pushd "$directory" || fatal "ERROR changing directory"
+    pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
     for file in *.sh *.bash *.md *.markdown ; do
       [[ "$file" =~ [\*]+ ]] && continue 
       update_file "$file"
