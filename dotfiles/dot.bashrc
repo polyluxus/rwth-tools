@@ -154,7 +154,7 @@ fi
 
 # Add helper script to execute befor prompt is displayed, 
 # or add the time _in_ the prompt
-if command -v ii2l.bash > /dev/null ; then
+if command -v ii2l.bash > /dev/null && ii2l.bash test &> /dev/null ; then
   PROMPT_COMMAND="ii2l.bash"
 else
   PS1="\\D{%H:%M} $PS1"
