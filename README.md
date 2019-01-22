@@ -7,4 +7,4 @@ There should be seperate README files in each subdirectory.
 This technically goes without saying, but here we go: 
 There is also absolutely no warranty in any case. If you decide to use any of the scripts, it is entirely your resonsibility.
 
-___version___: 2019-01-21-1140
+___version___: 2019-01-22-2040
