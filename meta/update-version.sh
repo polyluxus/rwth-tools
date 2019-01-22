@@ -10,6 +10,7 @@ fi
 update_text="Updating"
 unchanged_text="Unchanged"
 fatal_text="ERROR"
+warning_text="WARNING"
 
 fatal ()
 {
@@ -17,22 +18,24 @@ fatal ()
   exit 1
 }
 
-if command -v tput > /dev/null ; then 
-  if [[ $TERM == "xterm-256color" ]] ; then
-    # Need implement different color settings for 256color terminal, 
-    # but I need to research that
-    :
-  else
-    color_green=$(tput setf 2)
-    color_yellow=$(tput setf 6)
-    color_red=$(tput setf 1)
-    color_default=$(tput sgr0)
-    update_text="${color_green}Updating${color_default}"
-    unchanged_text="${color_yellow}Unchanged${color_default}"
-    fatal_text="${color_red}ERROR${color_default}"
-  fi
+warning ()
+{
+  echo "${warning_text}: $*"
+  return 1
+}
+
+if command -v tput > /dev/null && tput setaf 1 &> /dev/null ; then 
+  color_green=$(tput setaf 2)
+  color_yellow=$(tput setaf 3)
+  color_red=$(tput setaf 1)
+  color_magenta=$(tput setaf 5)
+  color_default=$(tput sgr0)
+  update_text="${color_green}${update_text}${color_default}"
+  unchanged_text="${color_yellow}${unchanged_text}${color_default}"
+  fatal_text="${color_red}${fatal_text}${color_default}"
+  warning_text="${color_magenta}${warning_text}${color_default}"
 else
-  fatal 'No color available.'
+  warning 'No color available.'
 fi
 
 update_file ()
