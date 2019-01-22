@@ -1,0 +1,39 @@
+#!/bin/bash
+# 
+# Will be sourced by ~/.bashrc of this package
+# ___version___: 2019-00-00-0000
+
+printf 'Available aliasses:'
+printf ' x (exit)'
+alias x='exit'
+printf ', vir (vi read.me)'
+alias vir="vi read.me"
+printf ', l (ls -lh)'
+alias l="ls -lh"
+printf ', ll (ls -Alh)'
+alias ll="ls -Alh"
+
+printf ', .., ..., cd..'
+alias ..="cd .."
+alias cd..="cd .."
+alias ...="cd ../.."
+#alias cdd="cd $(echo "$PWD" | cut -d/ -f 1-3)"
+#alias cdd="cd \"${PWD#"${PWD%/*/*}/"}\""
+#alias cdd="cd \"${PWD%"${PWD#/*/*/}"}\""
+printf ', cdw (cd $WORK), cdh (cd $HPCWORK)'
+alias cdw="cd $WORK"
+alias cdh="cd $HPCWORK"
+
+printf ', o (less)'
+alias o='less'
+
+if q_command=$(command -v myq || command -v myq.sh) ; then
+  printf ', q (%s)' "${q_command##*/}"
+  alias q="${q_command}"
+fi
+
+printf ', pdfview (evince)'
+alias pdfview=evince
+
+printf '.\n'
+

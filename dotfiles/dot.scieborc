@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# This file sets environment variables for the sync_sciebo function
+# defined in dot.bash_functions of this repository.
+# ___version___: 2019-00-00-0000
+
+# If this script is not sourced, return before executing anything
+if (( ${#BASH_SOURCE[*]} == 1 )) ; then
+  echo "This script is only meant to be sourced."
+  exit 0
+fi
+
+# Replace the template 'ABC123' with the actual username
+SCIEBOUSER="ABC123@rwth-aachen.de"
+# Set a directory you'd like to synchronise
+SCIEBOSOURCE="$HOME/sciebo"
+# Set the remote address (which should be the one given here for RWTH)
+SCIEBOTARGET="https://rwth-aachen.sciebo.de/"
+
+# Make these available
+export SCIEBOUSER SCIEBOSOURCE SCIEBOTARGET
