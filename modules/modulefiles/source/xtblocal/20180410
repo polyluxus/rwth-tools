@@ -1,0 +1,9 @@
+#%Module1.0#####################################################################
+##
+## xtb modulefile
+##
+
+set version "20180419"
+
+source "/usr/local_rwth/modules/modulefiles/source/xtb/xtb"
+

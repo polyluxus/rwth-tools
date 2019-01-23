@@ -1,0 +1,107 @@
+#%Module1.0#####################################################################
+##
+## xtb modulefile
+## https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/xtb
+set modulename "xtb6"
+set modulename_alias "xtb"
+set USERHOME "$::env(HOME)"
+
+set module_global_base_path /usr/local_rwth/modules/modulefiles/source
+
+source "$module_global_base_path/FUNCTIONS/output"
+source "$module_global_base_path/FUNCTIONS/usage_log"
+
+log_module_load $modulename_alias/$version
+
+set var [get_envvar_break R_LOGINMODE]
+
+#define local variable
+set SOFTWARE "${USERHOME}/local/$modulename_alias/$modulename_alias.$version"
+
+#differ between different platforms, e.g. if the path depends on the plattform
+switch [uname machine] {
+  i386 -
+  i586 -
+  i686 -
+  i786 {
+    set MACHINE linux
+  }
+  x86_64 {
+    set MACHINE linux
+  }
+  sun4u -
+  sun4v {
+    set MACHINE unsupported
+  }
+  i86pc {
+    set MACHINE unsupported
+  }
+}
+
+# this is the help output, printed by "module help"
+proc ModulesHelp { } {
+# define the global variables version and modulename in this function
+  global version
+  global modulename
+  puts stderr "*** This module initialises the $modulename $version environment           ***"
+  puts stderr "    An extended tight-binding semi-empirical program package                  " 
+  puts stderr "    Please contact xtb@thch.uni-bonn.de for details.                          "
+}
+
+# short description (preferably 1 line) what the loaded software does
+# or what the module is good for. printed by "module whatis"
+module-whatis  "$modulename is an extended tight-binding semi-empirical program package"
+
+# if module should be loaded, check for conflicts and print info
+switch [module-info mode] {
+  load {     #is this module already loaded?
+    set conflict "$modulename/$version"
+    if { [is-loaded $conflict]} {
+      m_warning "$conflict already loaded, doing nothing"
+      return
+    }
+    set conflict $modulename 
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    set conflict $modulename_alias
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    #check if software is really installed, if not error
+    if { ![file isdirectory $SOFTWARE] } {
+      m_error "This software is not installed on this machine. Please try another one.\n"
+      exit
+    }
+    m_success "Loading $modulename $version"
+    m_hint    "NOTE the binaries:  xtb confscript"
+    ### pre-6.0 xtb ### m_hint "  NOTE the binaries:  confscript  findtautomers  qmdff  rmhatom  setdg  xtb"
+  }
+  unload {
+    m_success "Unloading $modulename $version"
+  }
+}
+
+# This should only be a temproary configure variable
+set           XTBHOME  $SOFTWARE
+
+# This should be obsolete (but apparently it doesn't work with the current distribution
+setenv        XTBHOME  $XTBHOME
+# This should replace above
+setenv        XTBPATH  $XTBHOME
+# This should work for now (6.0), but should be replaced with below
+###   prepend-path  PATH     $XTBHOME
+
+# The following should work, but currently (6.0) directories are missing 
+# (uncomment when distribution is fixed)
+prepend-path  PATH     $XTBHOME/bin
+prepend-path  PATH     $XTBHOME/scripts
+prepend-path  MANPATH  $XTBHOME/man
+
+
+#ATTENTION
+#do NOT use m_error, m_success, m_warning or puts stderr 
+#outside of an conditional expression!
+#elsewise this will be printed on every load, unload and even whatis command!

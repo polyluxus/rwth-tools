@@ -1,0 +1,64 @@
+#%Module1.0#####################################################################
+##
+## python base modulefile
+##
+set modulename python
+
+set module_global_base_path /usr/local_rwth/modules/modulefiles/source
+set USERHOME "$::env(HOME)"
+
+source "$module_global_base_path/FUNCTIONS/output"
+source "$module_global_base_path/FUNCTIONS/usage_log"
+
+global MAJORVERSION
+global MINORVERSION
+global REVISION
+set version "$MAJORVERSION.$MINORVERSION.$REVISION"
+
+set PYTHONBASE "${USERHOME}/local/python"
+set PYTHON "${PYTHONBASE}/Python-${version}-build"
+
+proc ModulesHelp { } {
+	global version
+	global modulename
+	puts stderr "\tThis module initializes the $modulename $version environment"
+	puts stderr "Loads/changes environment variables:\n PATH  LD_LIBRARY_PATH  MANPATH  PYTHONPATH"
+}
+
+module-whatis	"python $version - an interpreted, interactive, object-oriented programming language"
+
+if { [ module-info mode load ] } {
+    #is this module already loaded?
+    set conflict "$modulename/$version"
+    if { [is-loaded $conflict]} {
+      #print a yellow waring at the end of the line
+      m_warning "$conflict already loaded, doing nothing"
+      exit
+    }
+    #define conflicts here (example the conflicting module)
+    set conflict $modulename 
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    set conflict "pythoni" 
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    if {![file isdirectory ${PYTHON}] } {
+      m_error "$modulename/$version is not installed on this machine."
+      exit
+    }
+	m_success "Loading python $version"
+}
+
+if { [ module-info mode unload ] } {
+	m_success "Unloading python $version"
+}
+
+prepend-path            PATH $PYTHON/bin
+prepend-path         MANPATH $PYTHON/share/man
+prepend-path LD_LIBRARY_PATH $PYTHON/lib
+prepend-path      PYTHONPATH $PYTHON
+
