@@ -1,0 +1,91 @@
+#%Module1.0#####################################################################
+##
+## xtb modulefile
+## https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/xtb
+set modulename "xtb"
+
+set module_base_path /usr/local_rwth/modules/modulefiles/source
+
+source "$module_base_path/FUNCTIONS/output"
+source "$module_base_path/FUNCTIONS/usage_log"
+
+log_module_load $modulename/$version
+
+set var [get_envvar_break R_LOGINMODE]
+
+#define local variable
+set SOFTWARE /rwthfs/rz/SW/chemistry/xtb/$version      
+
+#differ between different platforms, e.g. if the path depends on the plattform
+switch [uname machine] {
+  i386 -
+  i586 -
+  i686 -
+  i786 {
+    set MACHINE linux
+  }
+  x86_64 {
+    set MACHINE linux
+  }
+  sun4u -
+  sun4v {
+    set MACHINE unsupported
+  }
+  i86pc {
+    set MACHINE unsupported
+  }
+}
+
+# this is the help output, printed by "module help"
+proc ModulesHelp { } {
+# define the global variables version and modulename in this function
+  global version
+  global modulename
+  puts stderr "*** This module initialises the $modulename $version environment           ***"
+  puts stderr "   An extended tight-binding semi-empirical program package                   " 
+  puts stderr "   Please contact xtb@thch.uni-bonn.de for details.                           "
+}
+
+# short description (preferably 1 line) what the loaded software does
+# or what the module is good for. printed by "module whatis"
+module-whatis  "$modulename is an extended tight-binding semi-empirical program package"
+
+# if module should be loaded, check for conflicts and print info
+switch [module-info mode] {
+  load {     #is this module already loaded?
+    set conflict "$modulename/$version"
+    if { [is-loaded $conflict]} {
+      m_warning "$conflict already loaded, doing nothing"
+      return
+    }
+    set conflict $modulename 
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    #check if software is really installed, if not error
+    if { ![file isdirectory $SOFTWARE] } {
+      m_error "This software is not installed on this machine. Please try another one.\n"
+      exit
+    }
+    m_success "Loading $modulename $version"
+    m_hint "  NOTE the binaries:  confscript  findtautomers  qmdff  rmhatom  setdg  xtb"
+  }
+  unload {
+    m_success "Unloading $modulename $version"
+  }
+}
+
+#define all environment changes here. 
+
+#set needed environment variables
+
+#prepend needed pathes for this software
+prepend-path PATH $SOFTWARE
+setenv   XTB_ROOT $SOFTWARE
+setenv   XTBHOME  $SOFTWARE
+
+#ATTENTION
+#do NOT use m_error, m_success, m_warning or puts stderr 
+#outside of an conditional expression!
+#elsewise this will be printed on every load, unload and even whatis command!

@@ -1,0 +1,33 @@
+#%Module1.0#####################################################################
+##
+##  dummy module
+##
+
+source "/usr/local_rwth/modules/modulefiles/source/output"
+
+set version "dummy"
+
+set USERHOME_DIR "$::env(HOME)"
+
+proc ModulesHelp { } {
+  global version
+  puts stderr "This module adds the $version modules environment"
+  puts stderr "\nto the loadable modules\n"
+  puts stderr "This module does nothing."
+}
+
+module-whatis "Add $version modules:\nnone\n"
+
+switch [module-info mode] {
+  load {
+    m_success "Loading $version environment"
+    m_hint    "Home directory is $USERHOME_DIR"
+  # module use $env(FINALDIR)/$version
+  }
+  unload {
+    m_success "Unloading $version environment"
+  # module unuse $env(FINALDIR)/$version
+  }
+}
+
+

@@ -1,0 +1,90 @@
+#%Module1.0###-*-tcl-*-#########################################################
+##
+## openmpi modulefile
+##
+set module_global_base_path  "/usr/local_rwth/modules/modulefiles/source/"
+set USERHOME "$::env(HOME)"
+
+source "$module_global_base_path/FUNCTIONS/output"
+source "$module_global_base_path/FUNCTIONS/module_management"
+source "$module_global_base_path/FUNCTIONS/usage_log"
+
+set module_base_path "${USERHOME}/local/modules/modulefiles/source/"
+
+set modulename       "openmpi"
+
+set OMPI_ROOT        "${USERHOME}/local/openmpi"
+
+proc ModulesHelp { } {
+	global version
+	global modulename
+	puts stderr "Loads $modulename $version environment variables:"
+	puts stderr "  PATH MANPATH LD_RUN_PATH LD_LIBRARY_PATH\n"
+  puts stderr "  MPI_NAME MPI_BINDIR MPI_LIBDIR MPI_INCLUDE MPI_ROOT MPI_HOME MPI_RUN\n"
+	puts stderr "Would you like to know more? http://www.open-mpi.org/"
+}
+
+module-whatis  "OpenMPI is a implementation of MPI-2 (message-passing interface), see http://www.open-mpi.org/ "
+
+switch [uname sysname] {
+	Linux {
+		set MPI_ARCH "linux"
+	}
+	default {
+		puts stderr  "modules: sysname: [uname sysname] is not supported!"
+		exit
+	}
+}
+
+set     MPI_ROOT "${OMPI_ROOT}/openmpi-${version}_bin"
+
+# if module should be loaded, check for conflicts and print info
+switch [module-info mode] {
+	load {
+		if { ![file isdirectory $MPI_ROOT] } {
+			m_error  $MPI_ROOT
+			m_error "No $modulename/$version available"
+			exit
+		}
+		set conflict "$modulename/$version"
+		if { [is-loaded $conflict]} {
+			m_warning "$conflict already loaded, doing nothing"
+			return
+		}
+		if { ![catch {set loadedmpi $env(_MPI_LOADED)}] } {
+			if { " " != $loadedmpi } { # switch problem workaround
+				m_error "$loadedmpi already loaded, try unloading it first."
+				exit
+			}
+		}
+		m_success "Loading $modulename $version"
+	}
+	unload {
+		#switch problem workaround
+		unsetenv _MPI_LOADED " "
+		m_success "Unloading $modulename $version"
+	}
+}
+
+setenv MPI_NAME openmpi
+setenv _MPI_LOADED "$modulename/$version"
+
+setenv _LAST_MPI openmpi
+setenv _LAST_MPI_MAJORVERSION $MAJORVERSION
+setenv _LAST_MPI_MINORVERSION $MINORVERSION
+setenv _LAST_MPI_REVISION     $REVISION
+
+prepend-path PATH            ${MPI_ROOT}/bin
+prepend-path MANPATH         ${MPI_ROOT}/share/man
+
+prepend-path LD_LIBRARY_PATH ${MPI_ROOT}/lib
+prepend-path LD_RUN_PATH     ${MPI_ROOT}/lib
+
+setenv MPI_BINDIR            ${MPI_ROOT}/bin
+setenv MPI_LIBDIR            ${MPI_ROOT}/lib
+setenv MPI_INCLUDE           ${MPI_ROOT}/include
+
+setenv MPI_ROOT              ${MPI_ROOT}
+setenv MPI_HOME              ${MPI_ROOT}
+setenv MPI_RUN               ${MPI_ROOT}/bin/mpirun
+

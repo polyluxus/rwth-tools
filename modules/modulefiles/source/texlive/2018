@@ -1,0 +1,9 @@
+#%Module1.0#####################################################################
+##
+## texlive modulefile
+##
+
+set version 2018
+set USERHOME "$::env(HOME)"
+
+source "${USERHOME}/local/modules/modulefiles/source/texlive/texlive"

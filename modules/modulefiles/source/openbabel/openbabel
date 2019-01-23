@@ -1,0 +1,72 @@
+#%Module1.0#####################################################################
+##
+## openbabel modulefile
+##
+set module_global_base_path /usr/local_rwth/modules/modulefiles/source
+set USERHOME_DIR   "$::env(HOME)"
+
+source "$module_global_base_path/FUNCTIONS/output"
+
+set module_base_path "${USERHOME_DIR}/local/modules/modulefiles/source/"
+
+set modulename "openbabel"
+
+set OPENBABEL_ROOT "$USERHOME_DIR/local/openbabel"
+set OPENBABEL_DIR  "${OPENBABEL_ROOT}/openbabel-${version}-install"
+
+set SOFTWARE       "${OPENBABEL_DIR}"
+
+# this is the help output, printed by "module help"
+proc ModulesHelp { } {
+# define the global variables modulename in this function
+  global modulename
+  puts stderr "*** This module initialises the $modulename environment                   ***"
+  puts stderr "    Open Babel is a chemical toolbox designed to speak the many languages of "
+  puts stderr "    chemical data. It's an open, collaborative project allowing anyone to "
+  puts stderr "    search, convert, analyze, or store data from molecular modeling, "
+  puts stderr "    chemistry, solid-state materials, biochemistry, or related areas. "
+
+}
+# short description (preferably 1 line) what the loaded software does
+# or what the module is good for. printed by "module whatis"
+module-whatis	"$modulename is a chemical toolbox"
+
+# if module should be loaded, check for conflicts and print info
+switch [module-info mode] {
+  load {
+    #is this module already loaded?
+    set conflict "$modulename"
+    if { [is-loaded $conflict]} {
+      #print a yellow waring at the end of the line
+      m_warning "$conflict already loaded, doing nothing"
+      return
+    }
+    #check if software is really installed, if not error
+    if { $version != "system-default" && ![file isdirectory $SOFTWARE] } {
+      m_error "This software is not installed on this machine or currently not available."
+      break
+    }
+
+    # OpenBabel ist frei/GPL
+    # http://en.wikipedia.org/wiki/Open_Babel
+    # http://openbabel.org
+    m_success "Loading $modulename"
+  }
+  unload {
+	m_success "Unloading $modulename"
+  }
+}
+
+#define all environment changes here.
+
+# this is not needed for sys-def version
+if { $version != "system-default" } {
+
+#prepend needed pathes for this software
+prepend-path            PATH $SOFTWARE/bin
+prepend-path LD_LIBRARY_PATH $SOFTWARE/lib
+prepend-path         MANPATH $SOFTWARE/share/man
+prepend-path      PYTHONPATH $SOFTWARE/lib
+
+}
+

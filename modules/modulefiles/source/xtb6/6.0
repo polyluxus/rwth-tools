@@ -1,0 +1,14 @@
+#%Module1.0#####################################################################
+##
+## XTB modulefile
+##
+
+set module_base_path "$::env(HOME)/local/modules/modulefiles/source"
+
+set MAJORVERSION "6"
+set MINORVERSION "0"
+
+set version "$MAJORVERSION.$MINORVERSION"
+
+source "$module_base_path/xtb6/xtb6"
+
