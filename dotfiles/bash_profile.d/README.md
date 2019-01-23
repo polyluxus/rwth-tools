@@ -20,6 +20,7 @@ This script enables colour support for the `ls` and `grep` utilities.
 ### `init_modules.bash`
 
 This script is a replacement for the module load funtion the RZ provides.
+(This is the same function as provided in [init-modules](../../init-modules).)
 It also adds a local directory (if found) to the module path.
 This is currently set to `$HOME/local/modules/modulefiles/LOCAL`,
 which I recommend, because a future version of this repository will
