@@ -48,7 +48,9 @@ fi
 update_file ()
 {
   [[ "$1" =~ [\*]+ ]] && return
-  printf '%s "%s" ... ' "$update_text" "$git_root/$1"
+  local display_git_root
+  display_git_root="${PWD/$git_root/<GIT_ROOT>}"
+  printf '%s "%s" ... ' "$update_text" "$display_git_root/$1"
   if [[ "$testrun" == "true" ]] ; then
     printf '\n  Setting: '
     sed -n "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/p" "$1"
@@ -65,7 +67,7 @@ update_directory ()
   [[ -d "$directory" ]] || return 1
   does_differ=$( git diff "origin/$git_branch" -- "$directory" )
   if [[ -z $does_differ ]] ; then
-    printf '%s: %s\n' "$unchanged_text" "$git_root/$directory"
+    printf '%s: %s\n' "$unchanged_text" "${PWD/$git_root/<GIT_ROOT>}/$directory"
     return 0
   fi
   pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
