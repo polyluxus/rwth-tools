@@ -42,4 +42,13 @@ The behaviour can of course similarly be tested:
 bash --norc -c "vim --version"
 ```
 
+### `set_lesspipe.bash`
+
+To make `less` more friendly for non-text input files look
+whether a script lesspipe is installed and set up the environment variable `LESSOPEN`. 
+I have tried [lesspipe of GitHub](https://github.com/wofr06/lesspipe), 
+but  couldn't get it to work properly.
+Therefore I'm falling back to the system default if it is installed
+(it currently is on the RWTH RZ cluster).
+
 ___version___: 2019-00-00-0000

@@ -85,17 +85,6 @@ shopt -s checkwinsize
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
-# Make less more friendly for non-text input files:
-# requires lesspipe to be installed: https://github.com/wofr06/lesspipe
-# I couldn't get the above to work properly, 
-# so I'm using falling back to the system default if installed
-
-if lesspipe_cmd=$(command -v lesspipe || command -v lesspipe.sh) ; then
-  LESSOPEN="|${lesspipe_cmd} %s"
-  export LESSOPEN
-fi
-unset lesspipe_cmd
-
 # Specify a directory as a shortcut for log files
 if [ -d "$HOME/logfiles" ] ; then
   LOGFILES="$HOME/logfiles"

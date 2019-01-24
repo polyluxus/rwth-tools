@@ -29,13 +29,19 @@ For more description see the [README](./bash_profile.d/README.md) there.
 ├── bash_profile.d
 │   ├── color_ls_grep.bash
 │   ├── init_modules.bash
-│   ├── README.md
+│   ├── README.md
+│   ├── set_lesspipe.bash
 │   └── vim.bash
 ├── dot.alias
 ├── dot.bash_functions
 ├── dot.bashrc
 ├── dot.inputrc
 ├── dot.scieborc
+├── dot.ssh
+│   ├── authorized_keys
+│   ├── config
+│   ├── known_hosts
+│   └── README.md
 ├── dot.zshrc
 └── README.md
 ```
