@@ -52,8 +52,8 @@ update_file ()
   display_git_root="${PWD/$git_root/<GIT_ROOT>}"
   printf '%s "%s" ... ' "$update_text" "$display_git_root/$1"
   if [[ "$testrun" == "true" ]] ; then
-    printf '\n  Setting: '
-    sed -n "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/p" "$1"
+    printf '\n  Setting: %s \n' \
+      "$(sed -n "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/p" "$1")"
   else
     sed -i "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/" "$1"
     printf 'done.\n'
