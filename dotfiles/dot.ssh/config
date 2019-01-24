@@ -1,0 +1,48 @@
+# SSH configuration file
+# Change the instances of <username> with your actual login name
+# Save this file (or append it) to ~/.ssh/config on the cluster
+# and on your home dialog system 
+# (if you are not using preconfigured sessions).
+# ___version___: 2019-00-00-0000
+
+
+#
+# Aachen
+#
+
+Host rwth-cluster
+    User <username>
+    Hostname cluster.rz.rwth-aachen.de
+
+Host rwth-login
+    User <username>
+    Hostname login.hpc.itc.rwth-aachen.de
+
+Host rwth-login2
+    User <username>
+    Hostname login2.hpc.itc.rwth-aachen.de
+
+Host rwth-copy
+    User <username>
+    Hostname copy.hpc.itc.rwth-aachen.de
+
+Host rwth-cluster-copy
+    User <username>
+    Hostname cluster-copy.rz.rwth-aachen.de
+
+Host rwth-cluster-copy2
+    User <username>
+    Hostname cluster-copy2.rz.rwth-aachen.de
+
+#
+# Misc.
+#
+
+Host *
+    ForwardAgent yes
+    ForwardX11 yes
+    ForwardX11Trusted yes
+    Compression yes
+    NoHostAuthenticationForLocalhost yes
+    ServerAliveInterval 900
+
