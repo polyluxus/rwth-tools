@@ -4,10 +4,17 @@ if [[ $1 == -h ]] ; then
   echo "This script fetches remote repository, checks local changes, and updates the version in those files."
   echo "___version___: 2019-01-22-2159"
   exit 0
+elif [[ $1 == -t ]] ; then
+  echo "Will perform a testrun, and not update any files."
+  testrun=true
 fi
 
 
-update_text="Updating"
+if [[ "$testrun" == "true" ]] ; then
+  update_text="Update necessary:"
+else
+  update_text="Updating"
+fi
 unchanged_text="Unchanged"
 fatal_text="ERROR"
 warning_text="WARNING"
@@ -41,15 +48,27 @@ fi
 update_file ()
 {
   [[ "$1" =~ [\*]+ ]] && return
-  printf '%s "%s" ... ' "$update_text" "$1"
-  sed -i "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/" "$1"
-  printf 'done.\n'
+  printf '%s "%s" ... ' "$update_text" "$git_root/$1"
+  if [[ "$testrun" == "true" ]] ; then
+    printf '\n  Setting: '
+    sed -n "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/p" "$1"
+  else
+    sed -i "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/" "$1"
+    printf 'done.\n'
+  fi
 }
 
 update_directory ()
 {
+  local directory="$1"
   local file subdirectory
-  pushd "$1" &> /dev/null || fatal "ERROR changing directory"
+  [[ -d "$directory" ]] || return 1
+  does_differ=$( git diff "origin/$git_branch" -- "$directory" )
+  if [[ -z $does_differ ]] ; then
+    printf '%s: %s\n' "$unchanged_text" "$git_root/$directory"
+    return 0
+  fi
+  pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
   for file in *.sh *.bash *.md *.markdown ; do
     [[ "$file" =~ [\*]+ ]] && continue 
     update_file "$file"
@@ -67,15 +86,19 @@ git_root=$( git rev-parse --show-toplevel )
 git_branch=$( git rev-parse --abbrev-ref HEAD )
 insert_version=$( date '+%Y-%m-%d-%H%M' )
 
-for directory in "$git_root" "${git_root}"/* ; do
-  [[ -d $directory ]] || continue
-  does_differ=$( git diff "origin/$git_branch" -- "$directory" )
-  if [[ -n $does_differ ]] ; then
-    update_directory "$directory"
-  else
-    printf '%s: %s.\n' "$unchanged_text" "$directory"
-  fi
-done
+update_directory "$git_root"
+   ###   #for directory in "$git_root" "${git_root}"/* ; do
+   ###   for directory in "$git_root" ; do
+   ###     [[ -d $directory ]] || continue
+   ###     does_differ=$( git diff "origin/$git_branch" -- "$directory" )
+   ###     if [[ -n $does_differ ]] ; then
+   ###       update_directory "$directory"
+   ###     else
+   ###       printf '%s: %s.\n' "$unchanged_text" "$directory"
+   ###     fi
+   ###   done
+
+[[ "$testrun" == "true" ]] && { echo "Testrun complete." ; exit 0 ; }
 
 cat <<EOF
 To apply these changes:
