@@ -19,7 +19,7 @@ while `runJabRef.bash` is a wrapper to JabRef.
 └── README.md
 ```
 
-___version___: 2019-01-22-2159
+___version___: 2019-01-24-1930
 
 ## Additional resources
 
