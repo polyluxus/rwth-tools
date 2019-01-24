@@ -46,6 +46,22 @@ update_file ()
   printf 'done.\n'
 }
 
+update_directory ()
+{
+  local file subdirectory
+  pushd "$1" &> /dev/null || fatal "ERROR changing directory"
+  for file in *.sh *.bash *.md *.markdown ; do
+    [[ "$file" =~ [\*]+ ]] && continue 
+    update_file "$file"
+  done
+  for subdirectory in */ ; do
+    [[ "$subdirectory" =~ [\*]+ ]] && continue
+    [[ -d "$subdirectory" ]] || continue
+    update_directory "$subdirectory"
+  done
+  popd &> /dev/null || fatal "ERROR changing directory" 
+}
+
 git fetch
 git_root=$( git rev-parse --show-toplevel )
 git_branch=$( git rev-parse --abbrev-ref HEAD )
@@ -55,12 +71,7 @@ for directory in "$git_root" "${git_root}"/* ; do
   [[ -d $directory ]] || continue
   does_differ=$( git diff "origin/$git_branch" -- "$directory" )
   if [[ -n $does_differ ]] ; then
-    pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
-    for file in *.sh *.bash *.md *.markdown ; do
-      [[ "$file" =~ [\*]+ ]] && continue 
-      update_file "$file"
-    done
-    popd &> /dev/null || fatal "ERROR changing directory" 
+    update_directory "$directory"
   else
     printf '%s: %s.\n' "$unchanged_text" "$directory"
   fi
