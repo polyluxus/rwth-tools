@@ -1,5 +1,5 @@
 #!/bin/bash
-#___version___: 2019-00-00-0000
+#___version___: 2019-01-28-1824
 
 if [[ $HOSTNAME =~ [Rr][Ww][Tt][Hh] ]] ; then
   echo "Running on $HOSTNAME." >&2

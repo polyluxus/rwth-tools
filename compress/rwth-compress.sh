@@ -6,7 +6,7 @@ usage ()
   echo "       The script tries to guess from the extension which action to use;" >&2
   echo "       where it will default to first create a tar archive and use zstd to compress it." >&2
   echo "       (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)" >&2
-  echo "       [ ___version___: 2019-01-08-2146 ]" >&2
+  echo "       [ ___version___: 2019-01-28-1824 ]" >&2
   exit 0
 }
 
