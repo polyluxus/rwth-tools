@@ -1,0 +1,13 @@
+#!/bin/false
+# This is a text/configuration file intended for the use on the RWTH RZ cluster.
+# The file should be used in conjunction with the init-modules script from 
+# https://github.com/polyluxus/rwth-tools
+#
+# Lines starting with a hastag will be skipped.
+# To load a list of modules on startup, include their names here one per line:
+texlive/2018
+openbabel/2.4.1
+python/3.6.5
+# (Note that the above lines need the software to actually be installed 
+# and set up with the module files from this repository.)
+#___version___: 2019-01-00-0000
