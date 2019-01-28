@@ -7,17 +7,34 @@ if [[ $1 == -h ]] ; then
 elif [[ $1 == -t ]] ; then
   echo "Will perform a testrun, and not update any files."
   testrun=true
+  shift
+fi
+if [[ $1 == -f ]] ; then
+  echo "Forcing update of all version numbers." 
+  force_update=true
+  shift
 fi
 
-
-if [[ "$testrun" == "true" ]] ; then
-  update_text="Update necessary:"
-else
-  update_text="Updating"
-fi
+# Default text settings:
 unchanged_text="Unchanged"
+update_text="Updating"
 fatal_text="ERROR"
 warning_text="WARNING"
+
+# Testrun specific settings
+if [[ "$testrun" == "true" ]] ; then
+  update_text="Update necessary:"
+  [[ "$force_update" == "true" ]] && unchanged_text="Update forced:"
+else
+  update_text="Updating"
+  if [[ "$force_update" == "true" ]] ; then
+    echo 'Do you want to continue? (NO/yes)'
+    read -r user_input
+    [[ "$user_input" =~ ^[Yy][Ee][Ss]$ ]] || exit 2
+    unset user_input
+    unchanged_text="Update forced:"
+  fi
+fi
 
 fatal ()
 {
@@ -68,7 +85,7 @@ update_directory ()
   does_differ=$( git diff "origin/$git_branch" -- "$directory" )
   if [[ -z $does_differ ]] ; then
     printf '%s: %s\n' "$unchanged_text" "${PWD/$git_root/<GIT_ROOT>}/$directory"
-    return 0
+    [[ "$force_update" == "true" ]] || return 0
   fi
   pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
   for file in *.sh *.bash *.md *.markdown ; do
@@ -104,11 +121,20 @@ update_directory "$git_root"
 
 cat <<EOF
 To apply these changes:
+  # Add eerything to the repository
   git add "$git_root"
+
+  # Commit the changes
   git commit # to enter message interactively
   # OR
-  git commit -m "Bump version to $insert_version"
+  git commit -m "Bump version to $insert_version" # Standard message
+
+  # Add a tag (lightweight tag, forced) used in development phase
   git tag -f "$insert_version"
+  # OR an annotated tag to release (should only be done if the update was forced)
+  git tag -a "$insert_version"
+
+  # Publish everything
   git push
 EOF
 
