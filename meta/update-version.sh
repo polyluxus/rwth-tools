@@ -1,19 +1,34 @@
 #!/bin/bash
 
-if [[ $1 == -h ]] ; then
-  echo "This script fetches remote repository, checks local changes, and updates the version in those files."
-  echo "___version___: 2019-01-24-1930"
-  exit 0
-elif [[ $1 == -t ]] ; then
-  echo "Will perform a testrun, and not update any files."
-  testrun=true
+while getopts :htf options ; do
+  case $options in
+    h)
+      echo "This script fetches remote repository, checks local changes, and updates the version in those files."
+      echo "Options: -h (show this help); -t (test run); -f (force on all files)"
+      echo "___version___: 2019-01-24-1930"
+      exit 0
+      ;;
+    t)
+      echo "Will perform a testrun, and not update any files."
+      testrun=true
+      ;;
+    f)
+      echo "Forcing update of all version numbers." 
+      force_update=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      exit 1
+      ;;
+  esac
+done
+
+shift $(( OPTIND -1 ))
+
+while [[ -n $1 ]] ; do
+  echo "Additional input ignored: $1"
   shift
-fi
-if [[ $1 == -f ]] ; then
-  echo "Forcing update of all version numbers." 
-  force_update=true
-  shift
-fi
+done
 
 # Default text settings:
 unchanged_text="Unchanged"
@@ -24,7 +39,7 @@ warning_text="WARNING"
 # Testrun specific settings
 if [[ "$testrun" == "true" ]] ; then
   update_text="Update necessary:"
-  [[ "$force_update" == "true" ]] && unchanged_text="Update forced:"
+  [[ "$force_update" == "true" ]] && unchanged_text="Update forced"
 else
   update_text="Updating"
   if [[ "$force_update" == "true" ]] ; then
