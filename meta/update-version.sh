@@ -151,5 +151,6 @@ To apply these changes:
 
   # Publish everything
   git push
+  git push --tags # for releases
 EOF
 
