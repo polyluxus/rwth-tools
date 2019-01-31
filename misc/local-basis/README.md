@@ -33,6 +33,6 @@ All scripts can be invoked with `debug`, to make them tell you what they are cur
 └── search-db.bash
 ```
 
-___version___: 2019-01-00-0000
+___version___: 2019-01-31-1936
 
 
