@@ -12,6 +12,13 @@ is a citation manager that interfaces well to [`biblatex`](https://ctan.org/pkg/
 There is a script that allows you to run it from the linux command line in this directory.
 - [**Notepad++**](https://notepad-plus-plus.org/)
 is a multipurpose textfile editor which I recommend when editing files on a Windows platform.
+- [**Vim**](https://www.vim.org/)
+is one of the most common editors in linux.
+It is highly configurable and supports a lot of file formats.
+It is preinstalled alongside many distributions, but you can also build it from source,
+which is available on [GitHub](https://github.com/vim/vim).
+I have included a startup script for Vim, which ensures that you are using the 'huge' version.
+More about that on the [respective readme page](../dotfiles/bash_profile.d/README.md) of this repository.
 - [**MobaXterm**](https://mobaxterm.mobatek.net/)
 is a terminal emulator for Windows, which has an X11 server, tabbed SSH-CLI, SCP-browser, 
 and more network tools. 
@@ -39,7 +46,7 @@ is the graphical interface to Gaussian 16.
 GaussView 5 is the predecessor, which interfaces predominantly to Gaussian 09.
 They are compatible to a degree, but newer features will not be available, and vice versa.
 I personally do not recommend using it, I found it a quite painful experience.
-Please not that it is only half as capable of anything if Gaussian is not installed.
+Please note that it is only half as capable of anything if Gaussian is not installed.
 - [**Multiwfn**](http://sobereva.com/multiwfn/)
 is a multifunctional wavefunction analyser. 
 It is a versatile tool to post-process quantum chemical calculations.
@@ -61,6 +68,12 @@ is the workhorse for many quantum chemists around the world.
 The online manual, [list of keywords](http://gaussian.com/keywords/), is a well organised 
 documentation of how to use the program. Always consult it first.
 
+- If you need more information on specific commands you can always try to consult the man pages with `man <command>`.
+These are often cluttered with technical details, and you spent a lot of time before finding what you need.
+A curated list of examples is available through the program **tldr**, which you can find on [GitHub](https://github.com/tldr-pages/tldr).
+I have tried the shell client `tldr`, which is also available on [GitHub](https://github.com/raylee/tldr),
+and the installation is quite simple.
+The interface allows you to use `tldr <command>` to show you most common usages and examples of the command you want to learn about.
 
 ## Articles & Documentation
 
