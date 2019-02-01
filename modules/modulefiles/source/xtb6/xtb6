@@ -2,45 +2,35 @@
 ##
 ## xtb modulefile
 ## https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/xtb
+###
+#
 set modulename "xtb6"
+# To detect/ be compatible with earlier versions
 set modulename_alias "xtb"
+# Necessary for local installs
 set USERHOME "$::env(HOME)"
 
-set module_global_base_path /usr/local_rwth/modules/modulefiles/source
-
+# Use the source directory from RWTH cluster
+# (This is taken from the orignial module file)
+set module_global_base_path "/usr/local_rwth/modules/modulefiles/source"
+# Use some functions
 source "$module_global_base_path/FUNCTIONS/output"
 source "$module_global_base_path/FUNCTIONS/usage_log"
-
+# (Not really necessary for local installs)
 log_module_load $modulename_alias/$version
 
-set var [get_envvar_break R_LOGINMODE]
-
-#define local variable
+# Define local variable with path to installation software
+# version will be set by referring module file
 set SOFTWARE "${USERHOME}/local/$modulename_alias/$modulename_alias.$version"
 
-#differ between different platforms, e.g. if the path depends on the plattform
-switch [uname machine] {
-  i386 -
-  i586 -
-  i686 -
-  i786 {
-    set MACHINE linux
-  }
-  x86_64 {
-    set MACHINE linux
-  }
-  sun4u -
-  sun4v {
-    set MACHINE unsupported
-  }
-  i86pc {
-    set MACHINE unsupported
-  }
-}
+# Differ between different platforms (originally), 
+# e.g. if the path depends on the plattform
+# (Removed because there is no reference to that further on,
+# as it is a precompiled package.)
 
-# this is the help output, printed by "module help"
+# This is the help output, printed by "module help"
 proc ModulesHelp { } {
-# define the global variables version and modulename in this function
+  # define the global variables version and modulename in this function
   global version
   global modulename
   puts stderr "*** This module initialises the $modulename $version environment           ***"
@@ -48,60 +38,61 @@ proc ModulesHelp { } {
   puts stderr "    Please contact xtb@thch.uni-bonn.de for details.                          "
 }
 
-# short description (preferably 1 line) what the loaded software does
-# or what the module is good for. printed by "module whatis"
+# Short description (preferably 1 line) what the loaded software does,
+# or what the module is good for. 
+# Printed by "module whatis":
 module-whatis  "$modulename is an extended tight-binding semi-empirical program package"
 
-# if module should be loaded, check for conflicts and print info
+# If module should be loaded, check for conflicts and print info
 switch [module-info mode] {
-  load {     #is this module already loaded?
+  load {     
+    # Is this module already loaded?
     set conflict "$modulename/$version"
     if { [is-loaded $conflict]} {
       m_warning "$conflict already loaded, doing nothing"
       return
     }
+    # Is a different version already loaded? (This would check xtb6)
     set conflict $modulename 
     if { [is-loaded $conflict]} {
       m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
       exit
     }
+    # Is a different version (pre 6.0) already loaded?
     set conflict $modulename_alias
     if { [is-loaded $conflict]} {
       m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
       exit
     }
-    #check if software is really installed, if not error
+    # Check if the software is really installed, if not error and abort.
     if { ![file isdirectory $SOFTWARE] } {
       m_error "This software is not installed on this machine. Please try another one.\n"
       exit
     }
+    # Nothing failed, print a success message:
     m_success "Loading $modulename $version"
     m_hint    "NOTE the binaries:  xtb confscript"
-    ### pre-6.0 xtb ### m_hint "  NOTE the binaries:  confscript  findtautomers  qmdff  rmhatom  setdg  xtb"
   }
   unload {
     m_success "Unloading $modulename $version"
   }
 }
 
-# This should only be a temproary configure variable
+# XTBHOME should only be a temprorary configure variable 
+# (it is not referenced by xtb any more)
+# It is the same as SOFTWARE, therefore this line is basically redundant.
 set           XTBHOME  $SOFTWARE
-
-# This should be obsolete (but apparently it doesn't work with the current distribution
+# XTBHOME should be obsolete (but it doesn't hurt to have it set).
 setenv        XTBHOME  $XTBHOME
-# This should replace above
+# XTBPATH replaces the old XTBHOME from version 6.0 onwards
 setenv        XTBPATH  $XTBHOME
-# This should work for now (6.0), but should be replaced with below
-###   prepend-path  PATH     $XTBHOME
 
-# The following should work, but currently (6.0) directories are missing 
-# (uncomment when distribution is fixed)
+# The following paths need to be set/adjusted for the 6.0 distributions
 prepend-path  PATH     $XTBHOME/bin
 prepend-path  PATH     $XTBHOME/scripts
 prepend-path  MANPATH  $XTBHOME/man
 
-
-#ATTENTION
-#do NOT use m_error, m_success, m_warning or puts stderr 
-#outside of an conditional expression!
-#elsewise this will be printed on every load, unload and even whatis command!
+# ATTENTION (from RWTH module file)
+# Do NOT use m_error, m_success, m_warning or puts stderr 
+# outside of an conditional expression!
+# elsewise this will be printed on every load, unload and even whatis command!
