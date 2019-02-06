@@ -9,34 +9,40 @@ fi
 
 declare -- show_full_path="false"
 
-#    +        1         2         3         4         5         6         7         8         9 
-#    123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
-#hlp ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#hlp +++                          Summary   for   bjobs                           +++
-#hlp ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#hlp The script is an interface to the bjobs command to reformat the output.
+#hlp The default behaviour is to print the currently running, pending, and finished/exited jobs.
+#hlp If the path doesn't fit the width of the window, it will be truncated or skipped.
+#hlp 
+#hlp Usage:
+#hlp   ${0##*/} [project(s)]
+#hlp   
+#hlp If one or more project names are given as arguments, the script will show a summary
+#hlp of the currentlöy running jobs in those projects instead.
 #hlp
 OPTIND=1
 
 while getopts :fl:h options ; do
-#      +        1         2         3         4         5         6         7         8         9 
-  #hlp +   Options:
+  #hlp Options:
   case $options in
-#        +        1         2         3         4         5         6         7         8         9 
-    #hlp +     -f           Full path
+    #hlp      -f           Show the full path (may result in two lines per entry)
+    #hlp
     f)
       show_full_path="true"
       ;;
 
-    #hlp +     -l <JOBID>   Print long listing of job with <JOBID>
+    #hlp      -l <JOBID>   Print the long format of the information of the job with <JOBID>
+    #hlp                   May be specified multiple times and will also print the normal summary.
+    #hlp
     l)
       bjobs -all "$OPTARG"
       ;;
 
-    #hlp +     -h           Show this!  
+    #hlp      -h           Show this help file and exit.  
+    #hlp
     h)
       pattern="^[[:space:]]*#hlp(.*)?$"
       while read -r line || [[ -n "$line" ]] ; do
-        [[ "$line" =~ $pattern ]] && printf 'HELP: %s\n' "${BASH_REMATCH[1]}"
+        [[ "$line" =~ $pattern ]] && eval "printf 'HELP: %s\n' \"${BASH_REMATCH[1]}\""
       done < <( grep '#hlp' "$0" )
       exit 0
       ;;
@@ -54,8 +60,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp +++ ___version___: 2019-01-28-1824                                           +++
-#hlp ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#hlp  ___version___: 2019-01-28-1824
 
 declare -a gathered_projects=( "$@" )
 
