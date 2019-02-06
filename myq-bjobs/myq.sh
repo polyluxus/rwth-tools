@@ -60,7 +60,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-01-28-1824
+#hlp  ___version___: 2019-02-06-1126
 
 declare -a gathered_projects=( "$@" )
 
