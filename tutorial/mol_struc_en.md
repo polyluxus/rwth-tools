@@ -244,4 +244,4 @@ with the functionals BP86, PBE0, TPSS, with the basis sets STO-3G, 6-31+G(d,p), 
 
 
 
-___version___: 2019-02-00-0000
+___version___: 2019-02-08-1717
