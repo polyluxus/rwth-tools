@@ -221,6 +221,26 @@ initial (guessed) structure to a final structure.
    ~/comp_chem/ $ g16.getfreq -V3  bp86svp.opt.freq.log
    ```
 
+8. Finalise the calculation with creating a formatted checkpoint file and a coordinate file.
+   The Gaussian checkpoint files are binary files and they are machine dependent.
+   That usually doesn't pose any problem, but it is good practice to create a pure text file anyway.
+   The formatted checkpointfile can be used as an input for further analysis by many programs,
+   therefore it is good to have in any case.
+   Writing an `xyz` file with the optimised structure helps cutting down loading times;
+   it also gives you an indicator that the calculation is done.
+
+   You can do these two steps together with the following command:
+   ```
+   ~/comp_chem/ $ g16k2xyz  bp86svp.opt.freq.chk
+   ```
+   The above command produces the formatted checkpoint file `bp86svp.opt.freq.fchk` and
+   the coordinate file `bp86svp.opt.freq.xyz`.
+   Alternatively you can use the script with the `-a` switch to do that for every `*.chk`
+   file in the current directory.
+
+Once you have done all the steps you can move on to interpreting the results,
+which is where often the real work lies.
+
 ## Exercise
 
 Calculate the the Gibs free energies for the above reaction,
@@ -229,9 +249,25 @@ H<sub>3</sub>O<sup>+</sup> + NH<sub>3</sub> &lrarr; H<sub>2</sub>O + NH<sub>4</s
 
 with the functionals BP86, PBE0, TPSS, with the basis sets STO-3G, 6-31+G(d,p), def2-SVP, def2-TZVPP.
 
+Total electronic energies of the calculations:
 
-
-
+| Method            | H<sub>2</sub>O | H<sub>3</sub>O<sup>+</sup> | NH<sub>3</sub> | NH<sub>4</sub><sup>+</sup> |
+| ----------------- | -------------- | -------------------------- | -------------- | -------------------------- |
+| BP86/STO-3G       |                |                            |                |                            |
+| BP86/6-31+g(d,p)  |                |                            |                |                            |
+| BP86/def2-SVP     |                |                            |                |                            |
+| BP86/def2-TZVPP   |                |                            |                |                            |
+|                   |                |                            |                |                            |
+| PBE0/STO-3G       |                |                            |                |                            |
+| PBE0/6-31+g(d,p)  |                |                            |                |                            |
+| PBE0/def2-SVP     |                |                            |                |                            |
+| PBE0/def2-TZVPP   |                |                            |                |                            |
+|                   |                |                            |                |                            |
+| TPSS/STO-3G       |                |                            |                |                            |
+| TPSS/6-31+g(d,p)  |                |                            |                |                            |
+| TPSS/def2-SVP     |                |                            |                |                            |
+| TPSS/def2-TZVPP   |                |                            |                |                            |
+|                   |                |                            |                |                            |
 
 ---
 ### Footnotes
