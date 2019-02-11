@@ -13,5 +13,6 @@ especially the [tools for g16](https://github.com/polyluxus/tools-for-g16.bash) 
 
 - [Basic molecular structure optimisations](mol_struc_en.md)
 - Transition state search
+- Commonly encountered error messages (and how to fix them)
 
 ___version___: 2019-02-08-1717
