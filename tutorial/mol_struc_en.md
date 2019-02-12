@@ -245,7 +245,7 @@ which is where often the real work lies.
 
 ### Protonation
 
-Calculate the the Gibs free energies for the above reaction,
+Calculate the the Gibbs free energies for the above reaction,
 
 H<sub>3</sub>O<sup>+</sup> + NH<sub>3</sub> &lrarr; H<sub>2</sub>O + NH<sub>4</sub><sup>+</sup>, 
 
