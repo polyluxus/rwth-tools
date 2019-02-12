@@ -13,7 +13,7 @@
 !exercises/
 
 # but also ignore the subdirectories (for now)
-exercises/*
+exercises/*/
 # (probably force include the relevant files.)
 
 # (This is probably redundant, but it can't hurt.)
