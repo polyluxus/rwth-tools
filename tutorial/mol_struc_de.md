@@ -256,4 +256,4 @@ Zum Vergleich gibt es [die Ergebnisse (in Englisch)](exercises/protonation.md) m
    `C(C[NH-])[NH-].C(C[NH-])[NH-].C(C[NH-])[NH-].[Co].[Cl-].[Cl-].[Cl-]`.
   
 
-___version___: 2019-02-11-1932
+___version___: 2019-02-12-2239
