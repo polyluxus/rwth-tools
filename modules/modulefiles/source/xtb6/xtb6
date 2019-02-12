@@ -41,7 +41,7 @@ proc ModulesHelp { } {
 # Short description (preferably 1 line) what the loaded software does,
 # or what the module is good for. 
 # Printed by "module whatis":
-module-whatis  "$modulename is an extended tight-binding semi-empirical program package"
+module-whatis  "$modulename_alias is an extended tight-binding semi-empirical program package"
 
 # If module should be loaded, check for conflicts and print info
 switch [module-info mode] {
@@ -69,28 +69,41 @@ switch [module-info mode] {
       m_error "This software is not installed on this machine. Please try another one.\n"
       exit
     }
+    # Check whether a < 6.0 version is trying to be loaded
+    if { ![string match 6.* $version] } {
+      m_warning "Version $modulename/$version is deprecated."
+    }
     # Nothing failed, print a success message:
     m_success "Loading $modulename $version"
-    m_hint    "NOTE the binaries:  xtb confscript"
+    # Print different messages depending on the version
+    if { [string equal $version 6.0 ] } {
+      m_hint  "Note that this version is deprecated."
+      m_hint  "NOTE the binaries:  xtb confscript"
+    }
+    if { [string equal $version 6.1 ] } {
+      m_hint  "NOTE the binaries:  xtb crest"
+    }
   }
   unload {
     m_success "Unloading $modulename $version"
   }
 }
 
-# XTBHOME should only be a temprorary configure variable 
-# (it is not referenced by xtb any more)
+# XTBHOME is a temprorary configure variable, it is ignored by version >= 6.0
 # It is the same as SOFTWARE, therefore this line is basically redundant.
 set           XTBHOME  $SOFTWARE
-# XTBHOME should be obsolete (but it doesn't hurt to have it set).
+# XTBHOME is obsolete (but it doesn't hurt to have it set either).
 setenv        XTBHOME  $XTBHOME
-# XTBPATH replaces the old XTBHOME from version 6.0 onwards
+# XTBPATH replaces the old XTBHOME from version >= 6.0 
 setenv        XTBPATH  $XTBHOME
 
 # The following paths need to be set/adjusted for the 6.0 distributions
 prepend-path  PATH     $XTBHOME/bin
-prepend-path  PATH     $XTBHOME/scripts
 prepend-path  MANPATH  $XTBHOME/man
+# Include the scripts directory, if it exists
+if { [file isdirectory $XTBHOME/scripts] } {
+  prepend-path  PATH     $XTBHOME/scripts
+}
 
 # ATTENTION (from RWTH module file)
 # Do NOT use m_error, m_success, m_warning or puts stderr 
