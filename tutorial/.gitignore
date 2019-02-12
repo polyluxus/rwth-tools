@@ -1,0 +1,33 @@
+# Ignore everything by default
+/*
+
+# but include all markdown/text files 
+!**.md
+!**.markdown
+!**.txt
+
+# and this file
+!.gitignore
+
+# and the relevant subdirectories
+!exercises/
+
+# but also ignore the subdirectories (for now)
+exercises/*/
+# (probably force include the relevant files.)
+
+# (This is probably redundant, but it can't hurt.)
+
+# Ignore platform dependent files (from Gaussian)
+#
+**/*.chk
+
+# Ignore dumped artefact files
+# Ignore temporary files
+#
+**/core.*
+**/.nfs*
+**/tmp.*
+**/*.tmp
+
+
