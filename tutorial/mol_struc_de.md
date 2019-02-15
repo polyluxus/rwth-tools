@@ -140,42 +140,56 @@ einer geratenen/ generierten Startstruktur zur finalen, optimierten Struktur gel
 
    Es erfordert ein bisschen Training ein gute Struktur zu erstellen, aber viele Programme,
    wie z.B. Chemcraft, haben auch Datenbanken mit Fragmenten.
+   Falls Gaussview der Editor Eurer Wahl ist, dann gibt es noch ein paar [Anmerkungen zu Gaussview (in Englisch)](notes_gv_en.md).
    Für einfache Moleküle lassen sich oft auch Strukturen im Internet finden, z.B.
    [ChemSpider](http://www.chemspider.com/), [PubChem](https://pubchem.ncbi.nlm.nih.gov/search/).
    Mit einem [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) code
-   und [Open Babel](http://openbabel.org) kann man auch eine Struktur erstellen, z.B. für Ethanol:
+   und [Open Babel](http://openbabel.org) kann man auch eine Struktur erstellen.
+   Für Ethanol ist der SMILES Code `CCO` 
+   (vgl. [PubChem CID 702](https://pubchem.ncbi.nlm.nih.gov/compound/ethanol#section=Canonical-SMILES)),
+   dann generiert der folgende Befehl eine Struktur in Cartesischen Koordinaten:
    ```
    ~/comp_chem/ $ obabel -:'CCO' -oxyz --gen3d -Oopt.start.xyz
    ```
-   Manchmal funktioniert das auch für complexe Moleküle,
+   Die Option `-:` nimmt einen SMILES Code als Input an,
+   `-o` wählt das Ausgabeformat (hier Xmol, Cartesische Koordinaten),
+   `--gen3d` weißt es an 3D Koordinaten zu schreiben,
+   und `-O` wählt die Ausgabedatei (vgl. [Open Babel Wiki](http://openbabel.org/wiki/Main_Page)).
+
+   Manchmal funktioniert das auch für komplexe Moleküle,
    leider selten für Metallorganische Verbindungen, 
    da ionische Bindungen nicht beschrieben werden (vgl. [Fußnoten](#footnotes)).
    
    In diesem Beispiel soll die Datei `bp86svp.start.xyz` heißen.
 
 2. Erstellt eine Input Datei. Man sollte wissen was in einer solchen Datei steht,
-daher ist es ratsam das auch einmal mit einem ganz normalen Editor zu schreiben.
-Hilfreich ist da Online-Handbuch von [Gaussian](http://gaussian.com/).
-Für eine einfach Optimierung mit BP86/def2-SVP, sähe dieser Schritt mit meinem Skript wie folgt aus
-```
-~/comp_chem/ $ g16.prepare -R'#P BP86/def2-SVP/W06' -r'OPT(MaxCycle=100)' -j'bp86svp.opt' bp86svp.start.xyz
-```
-Die erstellte Datei heißt dann `bp86svp.opt.com`.
+   daher ist es ratsam das auch einmal mit einem ganz normalen Editor zu schreiben.
+   Hilfreich ist da Online-Handbuch von [Gaussian](http://gaussian.com/).
+   Für eine *sehr einfache* Optimierung mit BP86/def2-SVP, 
+   sähe dieser Schritt mit meinem Skript wie folgt aus (vgl. [Fußnoten](#footnotes)):
+   ```
+   ~/comp_chem/ $ g16.prepare -R'#P BP86/def2-SVP/W06' -r'OPT(MaxCycle=100)' -j'bp86svp.opt' bp86svp.start.xyz
+   ```
+   Die erstellte Datei heißt dann `bp86svp.opt.com`.
+  
+   Eine Übersicht über die Optionen der Skripte gibt es als
+   [pdf Datei](https://github.com/polyluxus/tools-for-g16.bash/blob/master/docs/)
+   im [tools-for-g16](https://github.com/polyluxus/tools-for-g16.bash) Paket.
 
 3. Die Datei muss nun an das 'Queueing System' übergeben werden.
-Auch hier sollte man wissen was man tut, und das auch einmal von Hand gemacht haben.
-Mein Skript setzt jedoch viele Variablen und erleichtert so das Arbeiten sehr.
-In diesem Fall:
-```
-~/comp_chem/ $ g16.submit -p12 -m4000  bp86svp.opt.com
-```
-Es wird eine neue, modifizierte Input Datei generiert: `bp86svp.opt.gjf`, die bereits die wichtigen Variablen
-für Gaussian enthält, außerdem wird ein Skript erstellt, welche alle notwendigen Informationen
-für die Queue enthält, es heißt `bp86svp.opt.bsub.bash` (für den Fall `bsub-rwth`).
+   Auch hier sollte man wissen was man tut, und das auch einmal von Hand gemacht haben.
+   Mein Skript setzt jedoch viele Variablen und erleichtert so das Arbeiten sehr.
+   In diesem Fall:
+   ```
+   ~/comp_chem/ $ g16.submit -p12 -m4000  bp86svp.opt.com
+   ```
+   Es wird eine neue, modifizierte Input Datei generiert: `bp86svp.opt.gjf`, die bereits die wichtigen Variablen
+   für Gaussian enthält, außerdem wird ein Skript erstellt, welche alle notwendigen Informationen
+   für die Queue enthält, es heißt `bp86svp.opt.bsub.bash` (für den Fall `bsub-rwth`).
 
-Welche Parameter man vernünftiger Weise setzt erkennt man mit etwas Erfahrung,
-man sollte lediglich darauf achten nicht mehr anzufordern als möglich ist.
-(Die hier gewählten p12, m4000 sollten für mittelgroße Moleküle gut reichen.)
+   Welche Parameter man vernünftiger Weise setzt erkennt man mit etwas Erfahrung,
+   man sollte lediglich darauf achten nicht mehr anzufordern als möglich ist.
+   (Die hier gewählten p12, m4000 sollten für mittelgroße Moleküle gut reichen.)
 
 4. Wenn die Rechnung fertig ist (man bekommt wahrscheinlich eine E-Mail), gibt es die folgenden Output Dateien:
    - `bp86svp.opt.log`: die Ausgabedatei von Gaussian
@@ -255,5 +269,39 @@ Zum Vergleich gibt es [die Ergebnisse (in Englisch)](exercises/protonation.md) m
    [Tris(ethylenediamin)cobalt(III)chlorid](https://pubchem.ncbi.nlm.nih.gov/compound/407049):
    `C(C[NH-])[NH-].C(C[NH-])[NH-].C(C[NH-])[NH-].[Co].[Cl-].[Cl-].[Cl-]`.
   
+2. Ein angemessenes Theorieniveau zu wählen ist nicht gerade trivial da man einiges berücksichtigen muss,
+   zum Beispiel Präzision, Leistung und Geschwindigkeit.
+   Ich habe einen längeren Artikel (in Englisch) darüber geschrieben:
+   [DFT Functional Selection Criteria](https://chemistry.stackexchange.com/a/27418/4945).
+
+   Das Beispielkommando beutzt das Theorieniveau DF-BP86/def2-SVP, jedoch mit einem Zusatz.
+   Zur Erinnerung:
+   ```
+   ~/comp_chem/ $ g16.prepare -R'#P BP86/def2SVP/W06' -r'OPT(MaxCycles=100)' -j'bp86svp.opt' bp86svp.start.xyz
+   ```
+   Der `-R` Schaltier von g16.prepare setzt die Basis-Route auf `#P BP86/def2SVP/W06`. 
+   Die verschiedenen Teile bedeuten Folgendes:
+
+   - Das `#P` wählt die ausführliche Ausgabe aus ([G16-Handbuch] (http://gaussian.com/route/?tabid=1)),
+   Andere Optionen sind `#N` (normal) und` #T` (*terse*, knapp).
+   - Als Methode ist `BP86` ausgewählt, wodurch das Austauschfunktional `B` und das Korrelationsfunktional `P86` ausgewählt wird.
+   Es sind viele andere [Funktionale](http://gaussian.com/dft/) implementiert.
+   - Für das Beispiel habe ich den Basissatz def2-SVP gewählt; beachte: das Keyword ist ohne Bindestrich.
+   In [Gaussian](http://gaussian.com/basissets/) sind viele Basissätze verfügbar, und weitere können definiert werden,
+   das ist jedoch etwas für fortgeschrittenere Benutzer (und eine Übung für einen anderen Tag).
+   - Zusätzlich fordert diese Route *Density fitting*, 
+   manchmal auch als *Resolution-of-the-Identity* oder kurze RI-Näherung bezeichnet,
+   mit dem Hilfsbasissatz `W06` (weitere Informationen im [Handbuch](http://gaussian.com/basissets/?tabid=2)),
+   was die Berechnung beschleunigen sollte.
+   Dies ist auch über das Keyword [`DensityFit`/`DenFit`](http://gaussian.com/densityfit/) ansteuerbar;
+   und wird daher in der Theorie allgemein mit DF abgekürzt.
+
+   Der `-r` Schalter des Skripts fügt der Route weitere Keywords hinzu.
+   In diesem speziellen Fall fordern wir eine Optimierung ([`OPT`](http://gaussian.com/opt/)) mit höchstens 100 Zyklen an.
+
+   Die '-j` Option wählt einen Jobnamen für die Rechnung aus, von welchem auch die Dateinamen abgeleitet werden.
+
+   Das letzte Argument ist die Datei mit der Molekülstruktur, hier im Xmol-Format.
+   Es werden auch einige andere Formate erkannt, aber das ist auch etwas für einen späteren Zeitpunkt.
 
 ___version___: 2019-02-12-2239

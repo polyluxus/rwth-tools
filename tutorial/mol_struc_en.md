@@ -137,6 +137,7 @@ initial (guessed) structure to a final structure.
 
 1. Create a molecular structure file in cartesian coordinates (`*.xyz`) 
    with your preferred molecular editor, command line tool, or even text editor.
+   If you (intend to) use Gaussview, please see some more [notes on Gaussview](notes_gv_en.md).
 
    It needs a bit training to click together a reasonable guess, 
    Chemcraft has a reasonably large fragments database, 
@@ -147,25 +148,37 @@ initial (guessed) structure to a final structure.
    draw it with Chemdraw (etc.) and generate a 
    [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) code.
    You can use [Open Babel](http://openbabel.org) to create a guessed structure.
-   For example for ethanol:
+   For example, the SMILES for ethanol is `CCO`, 
+   see [PubChem CID 702](https://pubchem.ncbi.nlm.nih.gov/compound/ethanol#section=Canonical-SMILES),
+   then the command for Open Babel is:
    
    ```
    ~/comp_chem/ $ obabel -:'CCO' -oxyz --gen3d -Oopt.start.xyz
    ```
+   The option `-:` takes a SMILES as an input, 
+   the `-o` selects the output format (here chosen as Xmol, Cartesian coordinates),
+   `--gen3d` tells the program to generate 3D coordinates (duh!),
+   and `-O` selects the output file to write on; 
+   see also the [Open Babel Wiki](http://openbabel.org/wiki/Main_Page).
+
    That sometimes even works for more complex molecules; 
    unfortunately not for organometallics (and similar), 
-   because it doesn't describe ionic interactions (see [footnotes](#footnotes)).
+   because it doesn't describe ionic interactions (see [footnotes *1*](#footnotes)).
 
    Assume we did this, and we will call it `bp86svp.start.xyz`.
 
 2. Create an input file. That can be done by hand, using a text editor and the handbook 
    at [Gaussian](http://gaussian.com/) or with one of the tools.
-   A very simple optimisation would probably use BP86/def2-SVP, or similar, 
-   so you can just run the prepare script:
+   A *very simple* optimisation would probably use BP86/def2-SVP with mostly default parameters, 
+   or similar (see [footnotes *2*](#footnotes)), so you can just run the prepare script:
    ```
-   ~/comp_chem/ $ g16.prepare -R'#P BP86/def2-SVP/W06' -r'OPT(MaxCycle=100)' -j'bp86svp.opt' bp86svp.start.xyz
+   ~/comp_chem/ $ g16.prepare -R'#P BP86/def2SVP/W06' -r'OPT(MaxCycles=100)' -j'bp86svp.opt' bp86svp.start.xyz
    ```
    This will create the file `bp86svp.opt.com`.
+
+   You can find a [pdf file](https://github.com/polyluxus/tools-for-g16.bash/blob/master/docs/)
+   with the options for all of these scripts in the 
+   [tools-for-g16](https://github.com/polyluxus/tools-for-g16.bash) repository.
 
 3. Submit the input file to the queue.
    You can again write your own submission script or simply let mine handle it:
@@ -262,7 +275,38 @@ The [results](exercises/protonation.md) are available for comparison, along with
    [tris(ethylenediamine)cobalt(III) chloride](https://pubchem.ncbi.nlm.nih.gov/compound/407049):
    `C(C[NH-])[NH-].C(C[NH-])[NH-].C(C[NH-])[NH-].[Co].[Cl-].[Cl-].[Cl-]`.
   
+2. Choosing an appropriate level of theory is not often trivial, one has to consider a couple of things,
+   like accuracy, performance, and speed. 
+   I have previously written quite a long article about that: 
+   [DFT Functional Selection Criteria](https://chemistry.stackexchange.com/a/27418/4945).
 
+   The example command uses the DF-BP86/def2-SVP level of theory, but with something extra. Remember:
+   ```
+   ~/comp_chem/ $ g16.prepare -R'#P BP86/def2SVP/W06' -r'OPT(MaxCycles=100)' -j'bp86svp.opt' bp86svp.start.xyz
+   ```
+   The `-R` switch to g16.prepare sets the basic route section to `#P BP86/def2SVP/W06`, the different parts mean the following:
+
+   - The `#P` selects verbose printing ([G16 manual](http://gaussian.com/route/?tabid=1)),
+   other options are `#N` (normal) and `#T` (terse).
+   - The method is selected as `BP86`, which selects the exchange functional `B` and the correlation functional `P86`.
+   There are plenty of [Functionals implemented](http://gaussian.com/dft/).
+   - For the example I have chosen the def2-SVP basis set; please note that the keyword is without the dash.
+   There are again many available in [Gaussian](http://gaussian.com/basissets/), and additional ones can be defined;
+   that is something for more advanced users (and a topic for another day).
+   - Additionally, this route section requests density fitting 
+   (sometimes also referred to as *resolution-of-the-identity*, or short RI, approximation)
+   with the auxiliar basis set `W06` (see the [Manual](http://gaussian.com/basissets/?tabid=2) for more),
+   which should speed up the calculation.
+   This is also available via the [`DensityFit`/`DenFit`](http://gaussian.com/densityfit/) keyword, 
+   and therefore commonly abbreviated with DF in the level of theory.
+   
+   The `-r` switch to the script adds more keywords to the route section. 
+   In this specific case we'll request an optimisation ([`OPT`](http://gaussian.com/opt/)) with 100 cycles at the most.
+
+   The `-j` switch selects a jobname for the calculation, and it will further be used to derive filenames for it.
+
+   The last argument is the molecular structure file, here in the Xmol format. 
+   There are some other formats recognised, but that is also something for another day.
 
 
 ___version___: 2019-02-12-2239
