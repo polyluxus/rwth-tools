@@ -282,26 +282,26 @@ Zum Vergleich gibt es [die Ergebnisse (in Englisch)](exercises/protonation.md) m
    Der `-R` Schaltier von g16.prepare setzt die Basis-Route auf `#P BP86/def2SVP/W06`. 
    Die verschiedenen Teile bedeuten Folgendes:
 
-   - Das `#P` wählt die ausführliche Ausgabe aus ([G16-Handbuch] (http://gaussian.com/route/?tabid=1)),
-   Andere Optionen sind `#N` (normal) und` #T` (*terse*, knapp).
-   - Als Methode ist `BP86` ausgewählt, wodurch das Austauschfunktional `B` und das Korrelationsfunktional `P86` ausgewählt wird.
-   Es sind viele andere [Funktionale](http://gaussian.com/dft/) implementiert.
-   - Für das Beispiel habe ich den Basissatz def2-SVP gewählt; beachte: das Keyword ist ohne Bindestrich.
-   In [Gaussian](http://gaussian.com/basissets/) sind viele Basissätze verfügbar, und weitere können definiert werden,
-   das ist jedoch etwas für fortgeschrittenere Benutzer (und eine Übung für einen anderen Tag).
-   - Zusätzlich fordert diese Route *Density fitting*, 
-   manchmal auch als *Resolution-of-the-Identity* oder kurze RI-Näherung bezeichnet,
-   mit dem Hilfsbasissatz `W06` (weitere Informationen im [Handbuch](http://gaussian.com/basissets/?tabid=2)),
-   was die Berechnung beschleunigen sollte.
-   Dies ist auch über das Keyword [`DensityFit`/`DenFit`](http://gaussian.com/densityfit/) ansteuerbar;
-   und wird daher in der Theorie allgemein mit DF abgekürzt.
-
-   Der `-r` Schalter des Skripts fügt der Route weitere Keywords hinzu.
-   In diesem speziellen Fall fordern wir eine Optimierung ([`OPT`](http://gaussian.com/opt/)) mit höchstens 100 Zyklen an.
-
-   Die '-j` Option wählt einen Jobnamen für die Rechnung aus, von welchem auch die Dateinamen abgeleitet werden.
-
-   Das letzte Argument ist die Datei mit der Molekülstruktur, hier im Xmol-Format.
-   Es werden auch einige andere Formate erkannt, aber das ist auch etwas für einen späteren Zeitpunkt.
+   - Das `#P` wählt die ausführliche Ausgabe aus ([G16-Handbuch](http://gaussian.com/route/?tabid=1)),
+   andere Möglichkeiten sind `#N` (normal) und` #T` (*terse*, knapp).
+   - Als Methode ist `BP86` ausgewählt, wodurch das Austauschfunktional `B` und das Korrelationsfunktional `P86` ausgewählt wird.
+   Es sind viele andere [Funktionale](http://gaussian.com/dft/) implementiert.
+   - Für das Beispiel habe ich den Basissatz def2-SVP gewählt; beachte: das Keyword ist ohne Bindestrich.
+   In [Gaussian](http://gaussian.com/basissets/) sind viele Basissätze verfügbar, und weitere können definiert werden,
+   das ist jedoch etwas für fortgeschrittenere Benutzer (und eine Übung für einen anderen Tag).
+   - Zusätzlich fordert diese Route *Density fitting*, 
+   manchmal auch als *Resolution-of-the-Identity* oder kurze RI-Näherung bezeichnet,
+   mit dem Hilfsbasissatz `W06` (weitere Informationen im [Handbuch](http://gaussian.com/basissets/?tabid=2)),
+   was die Berechnung beschleunigen sollte.
+   Dies ist auch über das Keyword [`DensityFit`/`DenFit`](http://gaussian.com/densityfit/) ansteuerbar;
+   und wird daher in der Theorie allgemein mit DF abgekürzt.
+   
+   Der `-r` Schalter des Skripts fügt der Route weitere Keywords hinzu.
+   In diesem speziellen Fall fordern wir eine Optimierung ([`OPT`](http://gaussian.com/opt/)) mit höchstens 100 Zyklen an.
+   
+   Die `-j` Option wählt einen Jobnamen für die Rechnung aus, von welchem auch die Dateinamen abgeleitet werden.
+   
+   Das letzte Argument ist die Datei mit der Molekülstruktur, hier im Xmol-Format.
+   Es werden auch einige andere Formate erkannt, aber das ist auch etwas für einen späteren Zeitpunkt.
 
 ___version___: 2019-02-15-1743
