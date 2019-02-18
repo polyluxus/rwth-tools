@@ -103,8 +103,9 @@ update_directory ()
     [[ "$force_update" == "true" ]] || return 0
   fi
   pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
-  for file in *.sh *.bash *.md *.markdown ; do
-    [[ "$file" =~ [\*]+ ]] && continue 
+  for file in *.sh *.bash *.md *.markdown dot.* config ; do
+    [[ -r "$file" ]] || continue 
+    [[ -d "$file" ]] && continue
     update_file "$file"
   done
   for subdirectory in */ ; do
@@ -121,16 +122,6 @@ git_branch=$( git rev-parse --abbrev-ref HEAD )
 insert_version=$( date '+%Y-%m-%d-%H%M' )
 
 update_directory "$git_root"
-   ###   #for directory in "$git_root" "${git_root}"/* ; do
-   ###   for directory in "$git_root" ; do
-   ###     [[ -d $directory ]] || continue
-   ###     does_differ=$( git diff "origin/$git_branch" -- "$directory" )
-   ###     if [[ -n $does_differ ]] ; then
-   ###       update_directory "$directory"
-   ###     else
-   ###       printf '%s: %s.\n' "$unchanged_text" "$directory"
-   ###     fi
-   ###   done
 
 [[ "$testrun" == "true" ]] && { echo "Testrun complete." ; exit 0 ; }
 
