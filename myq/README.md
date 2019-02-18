@@ -13,4 +13,4 @@ Directories:
 - [slurm](./slurm): *in preparation* `myq.sh` is an interface to slurm,
   the queueing system available on the CLAIX16 and CLAIX18 cluster.
 
-___version___: 2019-02-12-2239
+___version___: 2019-02-18-1908

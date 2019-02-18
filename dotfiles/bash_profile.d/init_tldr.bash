@@ -1,5 +1,5 @@
 #!/bin/bash
-#___version___: 2019-02-00-0000
+#___version___: 2019-02-18-1908
 
 if (( ${#BASH_SOURCE[*]} == 1 )) ; then
   echo "This script is only meant to be sourced."

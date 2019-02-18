@@ -2,7 +2,7 @@
 #
 # This script is intended to switch to a different shell on the 
 # RWTH RZ cluster, which only allows zsh as login shell.
-# ___version___: 2019-00-00-0000
+# ___version___: 2019-02-18-1908
 #
 # Uncomment to show environment variables before doing anything
 # env | less
