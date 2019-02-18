@@ -1,8 +1,12 @@
 # SSH configuration file
-# Change the instances of <username> with your actual login name
-# Save this file (or append it) to ~/.ssh/config on the cluster
-# and on your home dialog system 
-# (if you are not using preconfigured sessions).
+# ======================
+#
+# Change the instances of 'username' with your actual login name.
+# Or follow the instructions in the README file.
+# 
+# Save this file (or append it) to ~/.ssh/config on the dialog systems
+# and on your home dialog system (if you are not using preconfigured sessions).
+#
 # ___version___: 2019-00-00-0000
 
 
@@ -10,6 +14,24 @@
 # Aachen
 #
 
+# New hosts CLAIX-2018:
+Host claix18
+    User <username>
+    Hostname login18-1.hpc.itc.rwth-aachen.de
+
+Host claix18-2
+    User <username>
+    Hostname login18-2.hpc.itc.rwth-aachen.de
+
+Host claix18-3
+    User <username>
+    Hostname login18-3.hpc.itc.rwth-aachen.de
+
+Host claix18-4
+    User <username>
+    Hostname login18-4.hpc.itc.rwth-aachen.de
+
+# Old hosts (BULL):
 Host rwth-cluster
     User <username>
     Hostname cluster.rz.rwth-aachen.de
