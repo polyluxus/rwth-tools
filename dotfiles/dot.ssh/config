@@ -39,33 +39,11 @@ Host claix18-copy-2
     User <username>
     Hostname copy18-2.hpc.itc.rwth-aachen.de
 
-# Old hosts (BULL):
+# Additional access points (BULL cluster)
 # Retained for now
 Host rwth-copy
     User <username>
     Hostname copy.hpc.itc.rwth-aachen.de
-
-# Deprecated from Mai 2019
-Host rwth-cluster
-    User <username>
-    Hostname cluster.rz.rwth-aachen.de
-
-Host rwth-login
-    User <username>
-    Hostname login.hpc.itc.rwth-aachen.de
-
-Host rwth-login2
-    User <username>
-    Hostname login2.hpc.itc.rwth-aachen.de
-
-# Deprecated from 25. 02. 2019
-Host rwth-cluster-copy
-    User <username>
-    Hostname cluster-copy.rz.rwth-aachen.de
-
-Host rwth-cluster-copy2
-    User <username>
-    Hostname cluster-copy2.rz.rwth-aachen.de
 
 #
 # Misc.
