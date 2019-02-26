@@ -255,6 +255,14 @@ elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
 	#SBATCH --error='${logdir}/compress.${usename}.e%J'
 	
 	END-of-header
+  # It is necessary to implement the constraints for the CLAIX18 because of the sometimes failing hpcwork
+  for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
+    [[ ${check_hpc%%/*/} =~ hpc ]] || continue
+    debug "Detected usage of HPCWORK."
+    echo "#SBATCH --constraint=hpcwork" >> "$submitfile"
+    echo '' >> "$submitfile"
+    break
+  done
   queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
 else
   fatal "Invalid queue: $queue"
