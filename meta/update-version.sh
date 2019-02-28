@@ -5,7 +5,7 @@ while getopts :htf options ; do
     h)
       echo "This script fetches remote repository, checks local changes, and updates the version in those files."
       echo "Options: -h (show this help); -t (test run); -f (force on all files)"
-      echo "___version___: 2019-02-18-1908"
+      echo "___version___: 2019-02-28-1243"
       exit 0
       ;;
     t)
