@@ -13,4 +13,13 @@ Directories:
 - [slurm](./slurm): *in preparation* `myq.sh` is an interface to slurm,
   the queueing system available on the CLAIX16 and CLAIX18 cluster.
 
+## Installation
+
+Copy or link the script(s) to a directory found in your path.
+No set-up required.
+
+There is another script in this directory, which tries to guess the
+command and execute the correct script.
+(If you copy all three scripts to the directory, it should also work on the old BULL cluster.)
+
 ___version___: 2019-02-28-1035
