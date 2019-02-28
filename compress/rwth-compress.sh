@@ -2,11 +2,19 @@
 
 usage ()
 {
-  echo "USAGE: $0 <target_(base)_filename> <source_directory>" >&2
-  echo "       The script tries to guess from the extension which action to use;" >&2
-  echo "       where it will default to first create a tar archive and use zstd to compress it." >&2
-  echo "       (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)" >&2
-  echo "       [ ___version___: 2019-02-12-2239 ]" >&2
+  local scriptname="${0##*/}"
+  {
+    echo "USAGE: $scriptname [opt] <target_(base)_filename> <source_directory>"
+    echo "INFO:  $scriptname will write a bash script to be submitted to a scheduler."
+    echo "MODUS: The script tries to guess from the extension which action to use;"
+    echo "       where it will default to first create a tar archive and use zstd to compress it."
+    echo "       (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)"
+    echo "OPTION:"
+    echo "  -q <ARG>    Use <ARG> as queueing system."
+    echo "              (Currently supported: slurm [default], busb)"
+    echo "  -k          Keep submission script."
+    echo "       [ ___version___: 2019-02-28-1243 ]"
+  } >&2
   exit 0
 }
 
@@ -63,10 +71,37 @@ if [[ ! "$HOSTNAME" =~ [Rr][Ww][Tt][Hh] ]] ; then
   debug "It might not work on $HOSTNAME."
 fi
 
+OPTIND=1
+queue="slurm"
+clean_script="delete"
+
+while getopts :q:kh options ; do
+  case $options in
+    q)
+      queue="$OPTARG"
+      debug "Selected queue: $queue"
+      if [[ ! "$queue" =~ ([Bb][Ss][Uu][Bb]|[Ss][Ll][Uu][Rr][Mm]) ]] ; then
+        fatal "Invalid argument for option -q: $queue"
+      fi
+      ;;
+    k)
+      clean_script="keep"
+      ;;
+    h)
+      usage
+      ;;
+    :)
+      fatal "Option -$OPTARG requires an argument."
+      ;;
+    \?)
+      fatal "Invalid option: -$OPTARG."
+  esac
+done
+
+shift $(( OPTIND - 1 ))
+
 # Check wehther there is something to do or not.
-[[ -z $1 ]] && usage
-[[ "$1" == "-h" ]] && usage
-[[ -z $2 ]] && usage
+(( $# < 2 )) && usage
 
 # Set default mode
 execution_mode=default
@@ -167,7 +202,6 @@ case "$execution_mode" in
     ;;
 esac
 
-
 source_directory=$(is_readable_directory "$2") || fatal "Directory does not exist ($2)."
 usename="${source_directory//\//%}"
 
@@ -186,19 +220,53 @@ logdir="$LOGFILES"
 debug "Logfile will be written to '$logdir'."
 
 # Write the script
-cat > "$submitfile" <<END-of-header
-#!/usr/bin/env bash
-#BSUB -n 1
-#BSUB -a openmp
-#BSUB -M 2000
-#BSUB -W 6:00
-#BSUB -N 
-#BSUB -J compress.${usename}
-#BSUB -o ${logdir}/compress.${usename}.o%J
-#BSUB -e ${logdir}/compress.${usename}.e%J
-#BSUB -R select[hpcwork]
-
-END-of-header
+if [[ $queue =~ ([Bb][Ss][Uu][Bb]) ]] ; then
+	cat > "$submitfile" <<-END-of-header
+	#!/usr/bin/env bash
+	#BSUB -n 1
+	#BSUB -a openmp
+	#BSUB -M 2000
+	#BSUB -W 6:00
+	#BSUB -N 
+	#BSUB -J compress.${usename}
+	#BSUB -o ${logdir}/compress.${usename}.o%J
+	#BSUB -e ${logdir}/compress.${usename}.e%J
+	
+	END-of-header
+  for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
+    [[ ${check_hpc%%/*/} =~ hpc ]] || continue
+    debug "Detected usage of HPCWORK."
+    echo "#BSUB -R select[hpcwork]" >> "$submitfile"
+    echo '' >> "$submitfile"
+    break
+  done
+  queue_cmd=$(command -v bsub) || fatal "Comand not found (bsub)."
+elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
+	cat > "$submitfile" <<-END-of-header
+	#!/usr/bin/env bash
+	#SBATCH --nodes=1
+	#SBATCH --ntasks=1
+	#SBATCH --cpus-per-task=1
+	#SBATCH --mem-per-cpu=2000
+	#SBATCH --time="6:00:00"
+	#SBATCH --mail-type=END,FAIL
+	#SBATCH --job-name="compress.${usename}"
+	#SBATCH --output='${logdir}/compress.${usename}.o%J'
+	#SBATCH --error='${logdir}/compress.${usename}.e%J'
+	
+	END-of-header
+  # It is necessary to implement the constraints for the CLAIX18 because of the sometimes failing hpcwork
+  for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
+    [[ ${check_hpc%%/*/} =~ hpc ]] || continue
+    debug "Detected usage of HPCWORK."
+    echo "#SBATCH --constraint=hpcwork" >> "$submitfile"
+    echo '' >> "$submitfile"
+    break
+  done
+  queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
+else
+  fatal "Invalid queue: $queue"
+fi
 
 if [[ "$execution_mode" == "tgz" ]] ; then
   echo "'$tar_cmd'  -v -czf '$target_zip_filename' '$source_directory'    2>&1 || exit 65"  >> "$submitfile"
@@ -214,11 +282,23 @@ debug "Content:"
 debug "$(cat "$submitfile")"
 echo 
 
-bsub_cmd=$(command -v bsub) || fatal "Comand not found (bsub)."
-debug "$("$bsub_cmd" < "$submitfile")"
+case "${queue_cmd##*/}" in
+  sbatch)
+    debug "$( "$queue_cmd" "$submitfile" )"
+    ;;
+  bsub)
+    debug "$( "$queue_cmd" < "$submitfile" )"
+    ;; 
+  *)
+    fatal "Not recognised command: ${queue_cmd##*/}."
+    ;;
+esac
 
-debug "$(rm -v "$submitfile")"
-
-
-
+if [[ $clean_script == "delete" ]] ; then
+  debug "$(rm -v "$submitfile")"
+elif [[ $clean_script == "keep" ]] ; then
+  debug "Submission script '$submitfile' kept."
+else
+  warning "Unknown cleanup mode."
+fi
 

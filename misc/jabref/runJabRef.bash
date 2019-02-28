@@ -3,7 +3,7 @@
 if [[ "$1" == -h ]] ; then
   echo "This script starts JabRef, being able to update first."
   echo "Usage: ${0##*/} [debug] [update]"
-  echo "___version___: 2019-02-12-2239"
+  echo "___version___: 2019-02-28-1243"
   exit 0
 fi
 

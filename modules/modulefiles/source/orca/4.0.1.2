@@ -22,6 +22,10 @@ if { ![is-loaded openmpi/2.0.2] } {
     m_warning "Incorrect OpenMPI is already loaded; will unload it."
     module unload openmpi
   }
+  if { [is-loaded intelmpi] } {
+    m_warning "IntelMPI is already loaded; will unload it."
+    module unload intelmpi
+  }
   module load openmpi/2.0.2
 }
 
