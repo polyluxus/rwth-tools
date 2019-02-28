@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090
 #
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# ___version___: 2019-02-18-1908
+# ___version___: 2019-02-28-1035
 
 # If not running interactively, don't do anything
 #
