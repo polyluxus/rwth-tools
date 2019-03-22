@@ -58,7 +58,7 @@ with Gaussian 16 Rev. B.01 and default convergence criteria.
 |                   |                |                            |                |                            |
 
 
-Table 2: Reaction energies for 
+Table 2: Reaction energies in kJ/mol for 
 H<sub>3</sub>O<sup>+</sup> + NH<sub>3</sub> &lrarr; H<sub>2</sub>O + NH<sub>4</sub><sup>+</sup>,
 at *T* = 298.15 K and *p* = 1 atm, calculated with Gaussian 16 Rev. B.01 and default settings.
 
