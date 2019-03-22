@@ -98,7 +98,7 @@ update_jabref ()
     debug "File exists already: $update_target" 
   else
     debug "Downloading latest release."
-    debug "$(wget --no-verbose "$update_url")"
+    debug "$(wget --no-verbose --output-document="$update_target" "$update_url")"
   fi
   debug "Updated: $update_target"
   echo "$update_target"
