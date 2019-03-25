@@ -3,7 +3,7 @@
 if [[ "$1" == -h ]] ; then
   echo "This script starts JabRef, being able to update first."
   echo "Usage: ${0##*/} [debug] [update]"
-  echo "___version___: 2019-02-28-1243"
+  echo "___version___: 2019-03-25-1627"
   exit 0
 fi
 
@@ -98,7 +98,7 @@ update_jabref ()
     debug "File exists already: $update_target" 
   else
     debug "Downloading latest release."
-    debug "$(wget --no-verbose "$update_url")"
+    debug "$(wget --no-verbose --output-document="$update_target" "$update_url")"
   fi
   debug "Updated: $update_target"
   echo "$update_target"

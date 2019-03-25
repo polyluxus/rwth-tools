@@ -26,5 +26,5 @@ These scripts are inteded to test whether modules can be loaded correctly.
 
 These scripts wrap around an executable to set environment variables.
 
-___version___: 2019-02-28-1243
+___version___: 2019-03-25-1627
 

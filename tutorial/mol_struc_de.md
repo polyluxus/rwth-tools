@@ -304,4 +304,4 @@ Zum Vergleich gibt es [die Ergebnisse (in Englisch)](exercises/protonation.md) m
    Das letzte Argument ist die Datei mit der Molekülstruktur, hier im Xmol-Format.
    Es werden auch einige andere Formate erkannt, aber das ist auch etwas für einen späteren Zeitpunkt.
 
-___version___: 2019-02-28-1243
+___version___: 2019-03-25-1627

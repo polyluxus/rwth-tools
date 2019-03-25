@@ -1,0 +1,206 @@
+\documentclass[   % 
+  final,          % 
+  a4paper,        % 
+  8pt
+]{extarticle}
+
+\usepackage[a4paper,margin=2cm]{geometry}
+
+% tables
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage[para]{threeparttablex}
+
+% bibliography
+\usepackage[
+  backend=biber,
+  citestyle=chem-acs
+]{biblatex}
+\addbibresource{publications.bib}
+
+% linking to the outside world
+\usepackage{hyperref}
+
+% What this is about
+\title{Atomic radii of the elements}
+\author{Martin C Schwarzer}
+\date{\today}
+
+% meta: rwth-tools
+% ___version___: 2019-03-22-0000
+
+\begin{document}
+\begin{ThreePartTable}
+  \begin{TableNotes}
+  \footnotesize
+\item [a] single-bond additive covalent radii, Ref.~\cite{Pyykkoe2009}
+\item [b] double-bond additive covalent radii, Ref.~\cite{Pyykkoe2009a}
+\item [c] triple-bond additive covalent radii, Ref.~\cite{Pyykkoe2005}
+\item [d] tetrahedral covalent radii for crystals, Ref.~\cite{Pyykkoe2012}
+\item [e] Consitent van der Waals Radii (compatible with Bondi), Ref.~\cite{Mantina2009} 
+\item [f] Consitent van der Waals Radius (correction of Bondi), Ref.~\cite{Rowland1996}
+\item [g] Consitent van der Waals Radii (Bondi), Ref.~\cite{Bondi1964}
+\item [h] Recommended crystallographic van der Waals Radii (Batsanov), Ref.~\cite{Batsanov2001}
+\item [i] Recommended equilibrium van der Waals Radii (Batsanov), Ref.~\cite{Batsanov2001}
+  \end{TableNotes}
+
+\begin{longtable}{rll*{7}{S[table-format=3.1, table-space-text-post = \tnote{a}, table-align-text-post = false]}}
+  \toprule
+  & & &
+  \multicolumn{4}{c}{Covalent Radii} &
+  \multicolumn{3}{c}{van der Waals Radii}\\
+  \(Z\)                                     & 
+  Symbol                                    & 
+  Name                                      &
+  \(r_1\)/\si{\pico\meter}\tnote{a}         &
+  \(r_2\)/\si{\pico\meter}\tnote{b}         &
+  \(r_3\)/\si{\pico\meter}\tnote{c}         &
+  \(r_\mathrm{t}\)/\si{\pico\meter}\tnote{d}&
+  \(r_\mathrm{B}\)/\si{\pico\meter}  &
+  \(r_\mathrm{c}\)/\si{\pico\meter}\tnote{h} & 
+  \(r_\mathrm{eq}\)/\si{\pico\meter}\tnote{h}    \\
+  \midrule
+  \endfirsthead
+  \toprule
+  \(Z\)                                     & 
+  Symbol                                    & 
+  Name                                      &
+  \(r_1\)/\si{\pico\meter}\tnote{a}         &
+  \(r_2\)/\si{\pico\meter}\tnote{b}         &
+  \(r_3\)/\si{\pico\meter}\tnote{c}         &
+  \(r_\mathrm{t}\)/\si{\pico\meter}\tnote{d}&
+  \(r_\mathrm{B}\)/\si{\pico\meter}  &
+  \(r_\mathrm{c}\)/\si{\pico\meter}\tnote{h} & 
+  \(r_\mathrm{eq}\)/\si{\pico\meter}\tnote{h}    \\
+  \midrule
+  \endhead
+  \bottomrule
+  \insertTableNotes
+  \endfoot
+  1  & H    & hydrogen      & 32    & {-}   & {-}   & {-}   & 110\tnote{f} & {-}        & {-}     \\
+  2  & He   & helium        & 46    & {-}   & {-}   & {-}   & 140\tnote{g} & {-}        & {-}     \\
+  3  & Li   & lithium       & 133   & 124   & {-}   & 137   & 181\tnote{g} & 220        & 263     \\
+  4  & Be   & beryllium     & 102   & 90    & 85    & 106.1 & 153\tnote{e} & 190        & 223     \\
+  5  & B    & boron         & 85    & 78    & 73    & 88.2  & 192\tnote{e} & 180        & 205     \\
+  6  & C    & carbon        & 75    & 67    & 60    & 77.3  & 170\tnote{g} & 170        & 196     \\
+  7  & N    & nitrogen      & 71    & 60    & 54    & 68.9  & 155\tnote{g} & 160        & 179     \\
+  8  & O    & oxygen        & 63    & 57    & 53    & 67.4  & 152\tnote{g} & 155        & 171     \\
+  9  & F    & fluorine      & 64    & 59    & 53    & 57.5  & 147\tnote{g} & 150        & 165     \\
+ 10  & Ne   & neon          & 67    & 96    & {-}   & {-}   & 154\tnote{g} & 240        & {-}     \\
+ 11  & Na   & sodium        & 155   & 160   & {-}   & {-}   & 227\tnote{g} & 220        & 277     \\
+ 12  & Mg   & magnesium     & 139   & 132   & 127   & 141.2 & 173\tnote{g} & 210        & 242     \\
+ 13  & Al   & aluminium     & 126   & 113   & 111   & 128.5 & 184\tnote{e} & 210        & 240     \\
+ 14  & Si   & silicon       & 116   & 107   & 102   & 117.6 & 210\tnote{g} & 210        & 226     \\
+ 15  & P    & phosphorus    & 111   & 102   & 94    & 108.4 & 180\tnote{g} & 195        & 214     \\
+ 16  & S    & sulfur        & 103   & 94    & 95    & 104.2 & 180\tnote{g} & 180        & 206     \\
+ 17  & Cl   & chlorine      & 99    & 95    & 93    & 107.6 & 175\tnote{g} & 180        & 205     \\
+ 18  & Ar   & argon         & 96    & 107   & 96    & {-}   & 188\tnote{g} & {-}        & {-}     \\
+ 19  & K    & potassium     & 196   & 193   & {-}   & {-}   & 275\tnote{g} & 280        & 302     \\
+ 20  & Ca   & calcium       & 171   & 147   & 133   & {-}   & 231\tnote{e} & 240        & 278     \\
+ 21  & Sc   & scandium      & 148   & 116   & 114   & 138.6 & {-}          & 230        & 262     \\
+ 22  & Ti   & titanium      & 136   & 117   & 108   & {-}   & {-}          & 215        & 244     \\
+ 23  & V    & vanadium      & 134   & 112   & 106   & {-}   & {-}          & 205        & 227     \\
+ 24  & Cr   & chromium      & 122   & 111   & 103   & {-}   & {-}          & 205        & 223     \\
+ 25  & Mn   & manganese     & 119   & 105   & 103   & 140.3 & {-}          & 205        & 225     \\
+ 26  & Fe   & iron          & 116   & 109   & 102   & 120.9 & {-}          & 205        & 227     \\
+ 27  & Co   & cobalt        & 111   & 103   & 96    & 125.6 & {-}          & 200        & 225     \\
+ 28  & Ni   & nickel        & 110   & 101   & 101   & {-}   & {-}          & 200        & 223     \\
+ 29  & Cu   & copper        & 112   & 115   & 120   & 127.1 & {-}          & 200        & 227     \\
+ 30  & Zn   & zinc          & 118   & 120   & {-}   & 130.4 & {-}          & 210        & 224     \\
+ 31  & Ga   & gallium       & 124   & 117   & 121   & 127.5 & 187\tnote{g} & 210        & 241     \\
+ 32  & Ge   & germanium     & 121   & 111   & 114   & 122.5 & 211\tnote{e} & 210        & 232     \\
+ 33  & As   & arsenic       & 121   & 114   & 106   & 117.4 & 185\tnote{g} & 205        & 225     \\
+ 34  & Se   & selenium      & 116   & 107   & 107   & 114.5 & 190\tnote{g} & 190        & 218     \\
+ 35  & Br   & bromine       & 114   & 109   & 110   & 119.5 & 183\tnote{g} & 190        & 210     \\
+ 36  & Kr   & krypton       & 117   & 121   & 108   & {-}   & 202\tnote{g} & {-}        & {-}     \\
+ 37  & Rb   & rubidium      & 210   & 202   & {-}   & {-}   & 303\tnote{e} & 290        & 315     \\
+ 38  & Sr   & strontium     & 185   & 157   & 139   & {-}   & 249\tnote{e} & 255        & 294     \\
+ 39  & Y    & yttrium       & 163   & 130   & 124   & {-}   & {-}          & 240        & 271     \\
+ 40  & Zr   & zirconium     & 154   & 127   & 121   & {-}   & {-}          & 230        & 257     \\
+ 41  & Nb   & niobium       & 147   & 125   & 116   & {-}   & {-}          & 215        & 246     \\
+ 42  & Mo   & molybdenum    & 138   & 121   & 113   & {-}   & {-}          & 210        & 239     \\
+ 43  & Tc   & technetium    & 128   & 120   & 110   & {-}   & {-}          & 205        & 237     \\
+ 44  & Ru   & ruthenium     & 125   & 114   & 103   & {-}   & {-}          & 205        & 237     \\
+ 45  & Rh   & rhodium       & 125   & 110   & 106   & {-}   & {-}          & 200        & 232     \\
+ 46  & Pd   & palladium     & 120   & 117   & 112   & {-}   & {-}          & 205        & 235     \\
+ 47  & Ag   & silver        & 128   & 139   & 137   & 147.3 & {-}          & 210        & 237     \\
+ 48  & Cd   & cadmium       & 136   & 144   & {-}   & 148.2 & {-}          & 220        & 237     \\
+ 49  & In   & indium        & 142   & 136   & 146   & 145.5 & 193\tnote{g} & 220        & 253     \\
+ 50  & Sn   & tin           & 140   & 130   & 132   & 140.0 & 217\tnote{g} & 225        & 246     \\
+ 51  & Sb   & antimony      & 140   & 133   & 127   & 136.3 & 206\tnote{e} & 220        & 241     \\
+ 52  & Te   & tellurium     & 136   & 128   & 121   & 133.5 & 206\tnote{g} & 210        & 236     \\
+ 53  & I    & iodine        & 133   & 129   & 125   & 134.5 & 198\tnote{g} & 210        & 222     \\
+ 54  & Xe   & xenon         & 131   & 135   & 122   & {-}   & 216\tnote{g} & {-}        & {-}     \\
+ 55  & Cs   & caesium       & 232   & 209   & {-}   & {-}   & 343\tnote{e} & 300        & 330     \\
+ 56  & Ba   & barium        & 196   & 161   & 149   & {-}   & 268\tnote{e} & 270        & 305     \\
+ 57  & La   & lanthanum     & 180   & 139   & 139   & {-}   & {-}          & 250        & 281     \\
+ 58  & Ce   & cerium        & 163   & 137   & 131   & {-}   & {-}          & {-}        & {-}     \\
+ 59  & Pr   & praseodymium  & 176   & 138   & 128   & {-}   & {-}          & {-}        & {-}     \\
+ 60  & Nd   & neodymium     & 174   & 137   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 61  & Pm   & promethium    & 173   & 135   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 62  & Sm   & samarium      & 172   & 134   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 63  & Eu   & europium      & 168   & 134   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 64  & Gd   & gadolinium    & 169   & 135   & 132   & {-}   & {-}          & {-}        & {-}     \\
+ 65  & Tb   & terbium       & 168   & 135   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 66  & Dy   & dysprosium    & 167   & 133   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 67  & Ho   & holmium       & 166   & 133   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 68  & Er   & erbium        & 165   & 133   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 69  & Tm   & thulium       & 164   & 131   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 70  & Yb   & ytterbium     & 170   & 129   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 71  & Lu   & lutetium      & 162   & 131   & 131   & {-}   & {-}          & {-}        & {-}     \\
+ 72  & Hf   & hafnium       & 152   & 128   & 122   & {-}   & {-}          & 225        & 252     \\
+ 73  & Ta   & tantalum      & 146   & 126   & 119   & {-}   & {-}          & 220        & 242     \\
+ 74  & W    & tungsten      & 137   & 120   & 115   & {-}   & {-}          & 210        & 236     \\
+ 75  & Re   & rhenium       & 131   & 119   & 110   & {-}   & {-}          & 205        & 235     \\
+ 76  & Os   & osmium        & 129   & 116   & 109   & {-}   & {-}          & 200        & 233     \\
+ 77  & Ir   & iridium       & 122   & 115   & 107   & {-}   & {-}          & 200        & 234     \\
+ 78  & Pt   & platinum      & 123   & 112   & 110   & {-}   & {-}          & 205        & 237     \\
+ 79  & Au   & gold          & 124   & 121   & 123   & {-}   & {-}          & 210        & 241     \\
+ 80  & Hg   & mercury       & 133   & 142   & {-}   & 147.8 & {-}          & 205        & 225     \\
+ 81  & Tl   & thallium      & 144   & 142   & 150   & 138   & 196\tnote{g} & 220        & 253     \\
+ 82  & Pb   & lead          & 144   & 135   & 137   & 144.1 & 202\tnote{g} & 230        & 253     \\
+ 83  & Bi   & bismuth       & 151   & 141   & 135   & 146.0 & 207\tnote{e} & 230        & 252     \\
+ 84  & Po   & polonium      & 145   & 135   & 129   & 141.6 & 197\tnote{e} & {-}        & {-}     \\
+ 85  & At   & astatine      & 147   & 138   & 138   & {-}   & 202\tnote{e} & {-}        & {-}     \\
+ 86  & Rn   & radon         & 142   & 145   & 133   & {-}   & 220\tnote{e} & {-}        & {-}     \\
+ 87  & Fr   & francium      & 223   & 218   & {-}   & {-}   & 348\tnote{e} & {-}        & {-}     \\
+ 88  & Ra   & radium        & 201   & 173   & 159   & {-}   & 283\tnote{e} & {-}        & {-}     \\
+ 89  & Ac   & actinium      & 186   & 153   & 140   & {-}   & {-}          & {-}        & {-}     \\
+ 90  & Th   & thorium       & 175   & 143   & 136   & {-}   & {-}          & 240        & 275     \\
+ 91  & Pa   & protactinium  & 169   & 138   & 129   & {-}   & {-}          & {-}        & {-}     \\
+ 92  & U    & uranium       & 170   & 134   & 118   & {-}   & {-}          & 230        & 265     \\
+ 93  & Np   & neptunium     & 171   & 136   & 116   & {-}   & {-}          & {-}        & {-}     \\
+ 94  & Pu   & plutonium     & 172   & 135   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 95  & Am   & americium     & 166   & 135   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 96  & Cm   & curium        & 166   & 136   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 97  & Bk   & berkelium     & 168   & 139   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 98  & Cf   & californium   & 168   & 140   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+ 99  & Es   & einsteinium   & 165   & 140   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+100  & Fm   & fermium       & 167   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+101  & Md   & mendelevium   & 173   & 139   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+102  & No   & nobelium      & 176   & 159   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+103  & Lr   & lawrencium    & 161   & 141   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+104  & Rf   & rutherfordium & 157   & 140   & 131   & {-}   & {-}          & {-}        & {-}     \\
+105  & Db   & dubnium       & 149   & 136   & 126   & {-}   & {-}          & {-}        & {-}     \\
+106  & Sg   & seaborgium    & 143   & 128   & 121   & {-}   & {-}          & {-}        & {-}     \\
+107  & Bh   & bohrium       & 141   & 128   & 119   & {-}   & {-}          & {-}        & {-}     \\
+108  & Hs   & hassium       & 134   & 125   & 118   & {-}   & {-}          & {-}        & {-}     \\
+109  & Mt   & meitnerium    & 129   & 125   & 113   & {-}   & {-}          & {-}        & {-}     \\
+110  & Ds   & darmstadtium  & 128   & 116   & 112   & {-}   & {-}          & {-}        & {-}     \\
+111  & Rg   & roentgenium   & 121   & 116   & 118   & {-}   & {-}          & {-}        & {-}     \\
+112  & Cn   & copernicium   & 122   & 137   & 130   & {-}   & {-}          & {-}        & {-}     \\
+113  & Nh   & nihonium      & 136   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+114  & Fl   & flerovium     & 143   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+115  & Mc   & moscovium     & 162   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+116  & Lv   & livermorium   & 175   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+117  & Ts   & tennessine    & 165   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+118  & Og   & oganesson     & 157   & {-}   & {-}   & {-}   & {-}          & {-}        & {-}     \\
+\end{longtable}
+\end{ThreePartTable}
+
+\printbibliography
+\end{document}
+
+
+

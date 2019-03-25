@@ -38,7 +38,14 @@ while getopts :fFl:u:h options ; do
     #hlp                   (WORK IN PROGRESS)
     #hlp
     l)
-      squeue --jobs="$OPTARG" --format="%all"
+      while read -r line || [[ -n $line ]] ; do
+        [[ $read_header != "off" ]] && { IFS='|' read -r -a header <<< "$line" ; read_header=off ; continue ; }
+        IFS='|' read -r -a body <<< "$line"
+      done < <( squeue --jobs="$OPTARG" --format="%all" )
+      for index in "${!header[@]}" ; do
+        printf '%-20s: %s\n' "${header[index]}" "${body[index]}"
+      done
+      printf '\n===================================\n\n'
       ;;
 
     #hlp      -u <USER>    Show for <USER>
@@ -69,7 +76,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-02-28-1243
+#hlp  ___version___: 2019-03-25-1627
 
 # Reimplement later (maybe)
 # declare -a gathered_projects=( "$@" )

@@ -23,4 +23,4 @@ command and execute the correct script.
 (If you copy all three scripts to the directory, 
 it should work without configuration/edit on the new CLAIX18 and the old BULL clusters.)
 
-___version___: 2019-02-28-1243
+___version___: 2019-03-25-1627
