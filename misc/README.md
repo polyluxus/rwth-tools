@@ -2,20 +2,35 @@
 
 This directory contains scripts which I did not really know where to put else.
 
-There are upposed to be fun little scripts in here, 
+There are supposed to be fun little scripts in here, 
 that don't serve a particular purpose, or
 other tools that may be handy at one point or another.
 
 For example `ii2l.bash` asks the question whether or not it is too late,
 while `runJabRef.bash` is a wrapper to JabRef.
 
+I have started some data sheets with values that are often needed;
+they are available as pdf files with their LaTeX source files.
+Some of them might be available as markdown files, too.
+
 ```
 .
+├── data-sheets
+│   ├── dftd3bj.pdf
+│   ├── radii.md
+│   ├── radii.pdf
+│   └── src
 ├── ii2l.bash
 ├── jabref
-│   ├── JabRef-4.3.1.jar
 │   ├── README.md
 │   └── runJabRef.bash
+├── local-basis
+│   ├── basis-download
+│   ├── bse.db
+│   ├── download-bs.bash
+│   ├── make-db.bash
+│   ├── README.md
+│   └── search-db.bash
 ├── README.md
 └── recommended-software.md
 ```

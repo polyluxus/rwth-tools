@@ -1,0 +1,116 @@
+\documentclass[   % 
+  final,          % 
+  a4paper,        % 
+% landscape,      %
+  8pt
+]{extarticle}
+
+\usepackage[a4paper,margin=2cm]{geometry}
+
+%\usepackage{listings}
+%\lstset{basicstyle=\ttfamily}
+
+% tables
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage[para]{threeparttablex}
+
+\usepackage{array}
+\newcolumntype{T}{>{\ttfamily}l}
+\newcommand{\cell}[1]{\multicolumn{1}{l}{#1}}
+
+% bibliography
+\usepackage[
+  backend=biber,
+  citestyle=chem-acs
+]{biblatex}
+\addbibresource{publications.bib}
+
+% linking to the outside world
+\usepackage{hyperref}
+
+%Greek letters
+\usepackage{textgreek}
+
+% What this is about
+\title{Dispersion correction parameters for the use in Gaussian 16}
+\author{Martin C Schwarzer}
+\date{\today}
+
+% meta: rwth-tools
+% ___version___: 2019-03-22-0000
+
+\begin{document}
+\section{List of functionals and coefficients for BJ-damping\texorpdfstring{\cite{Grimme2017}}{}}
+\begin{ThreePartTable}
+  \begin{TableNotes}
+  \footnotesize
+\item [a] For implemented methods, the corresponding method keyword is given, and 
+  other keywords to select the Dispersion correction.
+  The \texttt{IOps(3/174-178)} select the values for s6, s8, sr6 (zero-damping), a1, and a2, respectively.
+\item [b] It might be implemented, but the current version of this table ignores this.
+\item [c] The \emph{half-and-half} implementations are included in Gaussian 16 for backward compatibility.\cite{Gaussian2016}
+  The keywords are \texttt{BHandH} or \texttt{BHandHLYP}, but they are not further used in this compilation.
+\item [d] While other members of the HCTC family are implemented, e.g. HCTH/407 as \texttt{HTCH407} 
+  and \texttau-HCTH as \texttt{tHCTH}, the HCTH/120 functional is explicitly mentioned in the manual\cite{Gaussian2016}
+  as not being implemented.
+  \end{TableNotes}
+
+  \begin{longtable}{l*{4}{S[table-format=1.4,table-sign-mantissa=true]}T}
+  \toprule
+  Functional  & {s6} & {a1} & {s8} & {a2} & \multicolumn{1}{l}{Gaussian keywords\tnote{a}} \\
+  \midrule
+  \endhead
+  \bottomrule
+  \insertTableNotes
+  \endfoot
+  B1B95             & 1.000 & 0.2092  & 1.4507  & 5.5545 & B1B95 IOp(3/174=1000000,175=1450700,177=209200,178=5554500) \\
+  B2GPPLYP          & 0.560 & 0.0000  & 0.2597  & 6.3332 & \cell{n.a.\tnote{b}} \\
+  B3PW91            & 1.000 & 0.4312  & 2.8524  & 4.4693 & B3PW91 IOp(3/174=1000000,175=2852400,177=431200,178=4469300) \\
+  BHLYP             & 1.000 & 0.2793  & 1.0354  & 4.9615 & \cell{For backward compatibility only\tnote{c}} \\
+  BMK               & 1.000 & 0.1940  & 2.0860  & 5.9197 & BMK EmpiricalDispersion=GD3BJ \\
+  BOP               & 1.000 & 0.4870  & 3.295   & 3.5043 & \cell{n.a.\tnote{b}} \\
+  BPBE              & 1.000 & 0.4567  & 4.0728  & 4.3908 & BPBE EmpiricalDispersion=GD3BJ \\
+  CAMB3LYP          & 1.000 & 0.3708  & 2.0674  & 5.4743 & CAM-B3LYP EmpiricalDispersion=GD3BJ \\
+  LC{\textomega}PBE & 1.000 & 0.3919  & 1.8541  & 5.0897 & LC-wPBE EmpiricalDispersion=GD3BJ \\
+  MPW1B95           & 1.000 & 0.1955  & 1.0508  & 6.4177 & \cell{n.a.\tnote{b}} \\
+  MPWB1K            & 1.000 & 0.1474  & 0.9499  & 6.6223 & \cell{n.a.\tnote{b}} \\
+  mPWLYP            & 1.000 & 0.4831  & 2.0077  & 4.5323 & mPW1LYP IOp(3/174=1000000,175=2007700,177=483100,178=4532300) \\
+  OLYP              & 1.000 & 0.5299  & 2.6205  & 2.8065 & OLYP IOp(3/174=1000000,175=2620500,177=529900,178=2806500) \\
+  OPBE              & 1.000 & 0.5512  & 3.3816  & 2.9444 & OPBE IOp(3/174=1000000,175=3381600,177=551200,178=2944400) \\
+  oTPSS             & 1.000 & 0.4634  & 2.7495  & 4.3153 & \cell{n.a.\tnote{b}} \\
+  PBE38             & 1.000 & 0.3995  & 1.4623  & 5.1405 & \cell{n.a.\tnote{b}} \\
+  PBEsol            & 1.000 & 0.4466  & 2.9491  & 6.1742 & \cell{n.a.\tnote{b}} \\
+  PTPSS             & 0.750 & 0.000   & 0.2804  & 6.5745 & \cell{n.a.\tnote{b}} \\
+  PWB6K             & 1.000 & 0.1805  & 0.9383  & 7.7627 & \cell{n.a.\tnote{b}} \\
+  revSSB            & 1.000 & 0.4720  & 0.4389  & 4.0986 & \cell{n.a.\tnote{b}} \\
+  SSB               & 1.000 & -0.0952 & -0.1744 & 5.2170 & \cell{n.a.\tnote{b}} \\
+  TPSSh             & 1.000 & 0.4529  & 2.2382  & 4.6550 & TPSSh IOp(3/174=1000000,175=2238200,177=452900,178=4655000) \\
+  HCTH120           & 1.000 & 0.3563  & 1.0821  & 4.3359 & \cell{not implemented\tnote{d}} \\
+  \midrule
+  B2PLYP            & 0.640 & 0.3065  & 0.9147  & 5.0570 & B2PLYP \\
+  B3LYP             & 1.000 & 0.3981  & 1.9889  & 4.4211 & B3LYP EmpiricalDispersion=GD3BJ \\
+  B97D              & 1.000 & 0.5545  & 2.2609  & 3.2297 & B97D3 \\
+  BLYP              & 1.000 & 0.4298  & 2.6996  & 4.2359 & BLYP EmpiricalDispersion=GD3BJ \\
+  BP86              & 1.000 & 0.3946  & 3.2822  & 4.8516 & BP86 EmpiricalDispersion=GD3BJ \\
+  DSDBLYP           & 0.500 & 0.000   & 0.2130  & 6.0519 & \cell{n.a.\tnote{b}} \\
+  PBE0              & 1.000 & 0.4145  & 1.2177  & 4.8593 & PBE1PBE EmpiricalDispersion=GD3BJ \\
+  PBE               & 1.000 & 0.4289  & 0.7875  & 4.4407 & PBEPBE EmpiricalDispersion=GD3BJ \\
+  PW6B95            & 1.000 & 0.2076  & 0.7257  & 6.3750 & PW6B95D3 \\
+  PWPB95            & 0.820 & 0.0000  & 0.2904  & 7.3141 & \cell{n.a.\tnote{b}} \\
+  revPBE0           & 1.000 & 0.4679  & 1.7588  & 3.7619 & PBEh1PBE IOp(3/174=1000000,175=1758800,177=467900,178=3761900) \\
+  revPBE38          & 1.000 & 0.4309  & 1.4760  & 3.9446 & \cell{n.a.\tnote{b}} \\
+  revPBE            & 1.000 & 0.5238  & 2.3550  & 3.5016 & PBEhPBE IOp(3/174=1000000,175=2355000,177=523800,178=3501600) \\
+  rPW86PBE          & 1.000 & 0.4613  & 1.3845  & 4.5062 & \cell{n.a.\tnote{b}} \\
+  TPSS0             & 1.000 & 0.3768  & 1.2576  & 4.5865 & \cell{n.a.\tnote{b}} \\
+  TPSS              & 1.000 & 0.4535  & 1.9435  & 4.4752 & TPSSTPSS EmpiricalDispersion=GD3BJ \\
+\end{longtable}
+\end{ThreePartTable}
+
+\nocite{*}
+\printbibliography
+\end{document}
+
+
+
