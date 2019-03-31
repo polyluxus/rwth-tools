@@ -46,7 +46,7 @@ Assuming your local module files are installed in the following directories
 /home/<USER>/local/modules/modulefiles/source
 ```
 
-and further assuming `rwth-tools` is installes in the directory
+and further assuming `rwth-tools` is installed in the directory
 ```
 /home/<USER>/local/rwth-tools
 ```
