@@ -41,5 +41,5 @@ cp --no-clobber -vr -- "$rwth_tools_src/modules/modulefiles/source/pandoc" "$mod
 #Check with `module avail` if the new module file is recognised.
 #You should now be able to load it with `module load pandoc`.
 
-echo "This install script is ___version___: 2019-03-25-1627"
+echo "This install script is ___version___: 2019-03-31-1608"
 
