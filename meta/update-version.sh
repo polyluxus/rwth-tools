@@ -103,7 +103,7 @@ update_directory ()
     [[ "$force_update" == "true" ]] || return 0
   fi
   pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
-  for file in *.sh *.bash *.md *.markdown dot.* config ; do
+  for file in *.sh *.bash *.md *.markdown dot.* *.tex config ; do
     [[ -r "$file" ]] || continue 
     [[ -d "$file" ]] && continue
     update_file "$file"
