@@ -1,4 +1,7 @@
 #!/bin/bash
+# Tiny chooser script, rwth-tools
+# ___version___: 2019-03-25-1627
+
 if command -v bjobs &> /dev/null ; then
   if command -v myq_bjobs &> /dev/null ; then
     myq_bjobs "$@"
