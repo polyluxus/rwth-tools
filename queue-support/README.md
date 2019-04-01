@@ -30,4 +30,4 @@ command and execute the correct script.
 (If you copy all three `myq` scripts to the `~/bin` directory, 
 it should work without configuration/edit on the new CLAIX18 and the old BULL clusters.)
 
-___version___: 2019-03-25-1627
+___version___: 2019-04-01-2152
