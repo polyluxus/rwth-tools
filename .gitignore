@@ -1,2 +1,11 @@
+# Files to ignore generally (artefacts, archives, temporary files)
 .nfs**
-
+**.swp
+**.tar.gz
+**.tgz
+**.gz
+**.tmp
+tmp.**
+core.**
+# RWTH-tools
+# ___version___: 2019-04-04-1826
