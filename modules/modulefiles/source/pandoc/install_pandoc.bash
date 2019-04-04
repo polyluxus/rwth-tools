@@ -5,7 +5,7 @@
 
 # Detailed installation instructions are available in https://github.com/jgm/pandoc/blob/master/INSTALL.md.
 
-#The module files in this directory assume that they are installed along the following path:
+# The module files in this directory assume that they are installed along the following path:
 pandoc_base="$HOME/local/pandoc"
 
 echo "Obtaining pandoc. This may take a while."
@@ -27,9 +27,12 @@ tar xvzf "$pandoc_tgz" --strip-components 1 -C "$pandoc_dest"
 # Assuming your local module files are installed in the following directories
 module_LOCAL="$HOME/local/modules/modulefiles/LOCAL"
 module_source="$HOME/local/modules/modulefiles/source"
+[[ -d "$module_LOCAL" ]] || { echo "Directory '$module_LOCAL' does not exist. Abort." ; exit 1 ; }
+[[ -d "$module_source" ]] || { echo "Directory '$module_source' does not exist. Abort." ; exit 1 ; }
 
-# and further assuming `rwth-tools` is installes in the directory
+# and further assuming `rwth-tools` is installed in the directory
 rwth_tools_src="$HOME/local/rwth-tools"
+[[ -d "$rtwh_tools_src" ]] || { echo "Directory '$rwth_tools_src' does not exist. Abort." ; exit 1 ; }
 
 # copy the module files directly from *here* to *there*:
 cp --no-clobber -vr -- "$rwth_tools_src/modules/modulefiles/LOCAL/pandoc" "$module_LOCAL"
@@ -38,5 +41,5 @@ cp --no-clobber -vr -- "$rwth_tools_src/modules/modulefiles/source/pandoc" "$mod
 #Check with `module avail` if the new module file is recognised.
 #You should now be able to load it with `module load pandoc`.
 
-echo "This install script is___version___: 2019-03-25-1627"
+echo "This install script is ___version___: 2019-03-31-1608"
 

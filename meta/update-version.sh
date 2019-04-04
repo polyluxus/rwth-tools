@@ -5,7 +5,7 @@ while getopts :htf options ; do
     h)
       echo "This script fetches remote repository, checks local changes, and updates the version in those files."
       echo "Options: -h (show this help); -t (test run); -f (force on all files)"
-      echo "___version___: 2019-03-25-1627"
+      echo "___version___: 2019-04-01-2152"
       exit 0
       ;;
     t)
@@ -103,7 +103,7 @@ update_directory ()
     [[ "$force_update" == "true" ]] || return 0
   fi
   pushd "$directory" &> /dev/null || fatal "ERROR changing directory"
-  for file in *.sh *.bash *.md *.markdown dot.* config ; do
+  for file in *.sh *.bash *.md *.markdown dot.* *.tex config ; do
     [[ -r "$file" ]] || continue 
     [[ -d "$file" ]] && continue
     update_file "$file"
