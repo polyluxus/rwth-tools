@@ -17,11 +17,10 @@ declare -- show_full_path="false"
 #hlp   
 OPTIND=1
 
-while getopts :fFl:u:h options ; do
+while getopts :fFl:u:A:h options ; do
   #hlp Options:
   case $options in
     #hlp      -f           Show the full path (may result in two lines per entry)
-    #hlp                   (WORK IN PROGRESS)
     #hlp
     f)
       show_full_path="true"
@@ -48,9 +47,21 @@ while getopts :fFl:u:h options ; do
       printf '\n===================================\n\n'
       ;;
 
-    #hlp      -u <USER>    Show for <USER>
+    #hlp      -u <USER>    Show for specific user <USER> (default: $USER)
+    #hlp                   This may be specified by a comma-separated list without spaces.
+    #hlp                   If <USER>=all, then no specific user will be specified, 
+    #hlp                   which will result in all users shown. [Not recommended]
+    #hlp
     u)
       show_user="$OPTARG"
+      ;;
+
+    #hlp      -A <ACCOUNT> Show for <ACCOUNT> (or project) and all users within
+    #hlp                   This will turn off the output for a specific user.
+    #hlp                   This may be specified by a comma-separated list without spaces.
+    #hlp                   
+    A)
+      show_account="$OPTARG"
       ;;
 
     #hlp      -h           Show this help file and exit.  
@@ -77,9 +88,6 @@ shift $(( OPTIND - 1 ))
 
 #hlp
 #hlp  ___version___: 2019-04-04-1847
-
-# Reimplement later (maybe)
-# declare -a gathered_projects=( "$@" )
 
 declare -i width_total
 width_total=$(tput cols)
@@ -138,16 +146,6 @@ queue_output_common+="%.${width_slots}C "
 queue_output_common+="%.${width_id}i "
 queue_output_common+="%.${width_name}j "
 
-# Reimplement later (maybe)
-# for project in "${gathered_projects[@]}" ; do
-#   queue_output_time="submit_time:$width_time "
-#   echo "Project: $project"
-#   call_queue -u all -P "$project" -o "$queue_output_time$queue_output_common"
-#   unset queue_output_time
-# done
-# 
-# (( ${#gathered_projects[@]} > 0 )) && exit 0
-
 if (( width_remain < 20 )) ; then
   echo "Warning: Terminal is a bit too small to fit the directories."
   unset queue_output_exedir 
@@ -159,9 +157,21 @@ fi
 
 printf 'It is %s.\n\n' "$(date +"%F %T (%Z)")"
 
-queue_output_time="%${width_time}S "
-call_queue --user="$show_user" --states=R --format="$queue_output_time$queue_output_common$queue_output_exedir"
-queue_output_time="%${width_time}V "
-call_queue --user="$show_user" --states=PD --format="$queue_output_time$queue_output_common$queue_output_exedir"
-exit
+# Show account queue instead of user queue
+if [[ -n $show_account ]] ; then
+  queue_output_time="%${width_time}S "
+  call_queue --account="$show_account" --states=R --format="$queue_output_time$queue_output_common$queue_output_exedir"
+  queue_output_time="%${width_time}V "
+  call_queue --account="$show_account" --states=PD --format="$queue_output_time$queue_output_common$queue_output_exedir"
+elif [[ "$show_user" =~ ^[Aa][Ll][Ll]$ ]] ; then
+  queue_output_time="%${width_time}S "
+  call_queue --states=R --format="$queue_output_time$queue_output_common$queue_output_exedir"
+  queue_output_time="%${width_time}V "
+  call_queue --states=PD --format="$queue_output_time$queue_output_common$queue_output_exedir"
+else
+  queue_output_time="%${width_time}S "
+  call_queue --user="$show_user" --states=R --format="$queue_output_time$queue_output_common$queue_output_exedir"
+  queue_output_time="%${width_time}V "
+  call_queue --user="$show_user" --states=PD --format="$queue_output_time$queue_output_common$queue_output_exedir"
+fi
 
