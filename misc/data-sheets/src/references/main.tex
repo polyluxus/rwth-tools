@@ -1,0 +1,69 @@
+\documentclass[   % 
+  final,          % 
+  a4paper,        % 
+% landscape,      %
+  8pt
+]{extarticle}
+
+\usepackage[a4paper,margin=2cm]{geometry}
+
+% fonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% tables
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage[para]{threeparttablex}
+
+% bibliography
+\usepackage[
+  backend=biber,
+  citestyle=chem-acs,
+  subentry=true,
+]{biblatex}
+\addbibresource{publications.bib}
+
+% linking to the outside world
+\usepackage{hyperref}
+
+%Greek letters
+\usepackage{textgreek}
+
+% What this is about
+\title{References to common methods used in Copmutational Chemistry}
+\author{Martin C Schwarzer}
+\date{\today}
+
+% meta: rwth-tools
+% ___version___: 2019-04-00-0000
+
+\begin{document}
+\section{Semi-empirical methods}
+\begin{itemize}
+  \item GFN2-xTB\autocite{gfn2xtb}
+\end{itemize}
+
+\section{Density Functional Theory}
+\begin{itemize}
+  \item B97D3\autocite{Grimme2011}
+  \item PBE0\autocite{pbe0}
+\end{itemize}
+
+\section{Basis sets}
+\begin{itemize}
+  \item def2-family\autocite{def2}
+\end{itemize}
+
+\section{Quantum-chemical programs}
+\begin{itemize}
+  \item Gaussian 16\autocite{g16}
+\end{itemize}
+
+\nocite{*}
+\printbibliography
+\end{document}
+
+
+
