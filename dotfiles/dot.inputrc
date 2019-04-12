@@ -4,7 +4,7 @@
 # This is borrowed from different (long forgotten) sources,
 # and extended over time. I tested it on the RWTH RZ cluster and 
 # it still worked, so I'm including it here as:
-# ___version___: 2019-04-04-1847
+# ___version___: 2019-04-12-1335
 
 # Be 8 bit clean.
 set input-meta on
