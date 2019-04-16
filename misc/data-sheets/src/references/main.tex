@@ -40,15 +40,53 @@
 % ___version___: 2019-04-12-1335
 
 \begin{document}
+
+\section*{Preamble}
+
+This document aims to become a reference sheet for the most common references,
+and is therefore (technically) not limited to any particular methodology.
+There are plenty of methods for computational chemists and even more references.
+Eventually one has to pick up the manual of the program you are using to
+find out what exactly is implemented, and find the references within.
+Ideally they will match with what is given here.
+
+This is very much a work in progress, and as research continues,
+it will probably always be.
+All it can do right now is to point to publications, 
+which will at the very least provide a decent starting point for further research.
+
 \section{Semi-empirical methods}
 \begin{itemize}
   \item GFN2-xTB\autocite{gfn2xtb}
 \end{itemize}
 
+\section{Wavefunction based methods}
+\begin{itemize}
+  \item Hartree-Fock
+\end{itemize}
+
 \section{Density Functional Theory}
+Axel Becke remarked in a recent review:\autocite{Becke2014}
+\begin{quote}
+  Density-functional theory (DFT) is a subtle, seductive, provocative business. 
+  Its basic premise, that all the intricate motions and pair correlations in 
+  a many-electron system are somehow contained in the total electron density alone, 
+  is so compelling it can drive one mad.
+\end{quote}
+
+On should always bear in mind that DFT is \emph{in principle} exact.
+However, the methods based on it are approximations. 
+Becke continues to introduce the terminology Density Functional Approximation (DFA).
+\begin{quote}
+  Let us introduce the acronym DFA at this point for “density-functional approximation.” If you attend DFT meetings, you will know that Mel Levy often needs to remind us that DFT is exact. The failures we report at meetings and in papers are not failures of DFT, but failures of DFAs.
+\end{quote}
+
+In this spirit, this document gathers citations to DFAs.
+
 \begin{itemize}
   \item B97D3\autocite{Grimme2011}
   \item PBE0\autocite{pbe0}
+  \item BP86\autocite{bp86}
 \end{itemize}
 
 \section{Basis sets}
