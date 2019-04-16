@@ -3,7 +3,7 @@
 
 if (return 0 2>/dev/null) ; then
   # [How to detect if a script is being sourced](https://stackoverflow.com/a/28776166/3180795)
-  : #Everything is fine
+  : # Script is suorced, everything is fine
 else
   echo "This script is only meant to be sourced."
   exit 0
@@ -12,11 +12,11 @@ fi
 if command -v sacct &> /dev/null ; then
   :
 else
-  echo "This script is a wrapper to 'sacct', but the command was not found."
+  echo "The function to be defined is a wrapper to 'sacct', but the command was not found."
   return 1
 fi
 
-go2jobdir ()
+gotojobdir ()
 {
   local sacct_format="WorkDir"
   local print_only=false
@@ -29,8 +29,9 @@ go2jobdir ()
         ;;
       #         -h           Show this help file and exit.  
       h)
-        echo "The command is an interface to 'sacct' to retrieve the work directory and change to it."
-        echo "${0##*/} [option(s)] jobid"
+        echo "The command 'gotojobdir' is an interface to 'sacct' to retrieve the work directory and change to it."
+        echo "Usage: gotojobdir [option(s)] jobid"
+        echo "Options: -p (print only), -h (this help)"
         return 0
         ;;
       \?)
@@ -61,4 +62,4 @@ go2jobdir ()
   cd "$job_workdir" || { echo "Change to directory failed." ; return 1 ; }
   pwd
 }
-echo "Available command: go2jobdir [-h]"
+echo "Available command: gotojobdir [-h]"
