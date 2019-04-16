@@ -8,4 +8,4 @@ No special installation is necessary.
 Without a file that contains the modules to be tested one per line,
 the script will run against a small test set of Gaussian modules.
 
-___version___: 2019-04-04-1847
+___version___: 2019-04-16-1544
