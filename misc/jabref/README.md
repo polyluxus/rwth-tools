@@ -35,5 +35,5 @@ runJabRef.bash <JabRef arguments>
 ```
 
 
-___version___: 2019-04-12-1335
+___version___: 2019-04-16-1544
 

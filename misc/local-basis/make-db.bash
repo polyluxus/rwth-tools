@@ -6,7 +6,7 @@
 # This script tries to download parts of the BSE portal, and reformat
 # the content to a bash like format.
 #
-# ___version___: 2019-04-12-1335
+# ___version___: 2019-04-16-1544
 
 base_url="https://bse.pnl.gov/bse/portal"
 database_loc="$PWD/bse.db"

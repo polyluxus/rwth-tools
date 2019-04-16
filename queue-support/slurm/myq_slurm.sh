@@ -87,7 +87,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-04-12-1615
+#hlp  ___version___: 2019-04-16-1544
 
 declare -i width_total
 width_total=$(tput cols)

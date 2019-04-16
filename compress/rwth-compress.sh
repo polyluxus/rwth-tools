@@ -13,7 +13,7 @@ usage ()
     echo "  -q <ARG>    Use <ARG> as queueing system."
     echo "              (Currently supported: slurm [default], busb)"
     echo "  -k          Keep submission script."
-    echo "       [ ___version___: 2019-04-12-1335 ]"
+    echo "       [ ___version___: 2019-04-16-1544 ]"
   } >&2
   exit 0
 }

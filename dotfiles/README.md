@@ -46,4 +46,4 @@ For more description see the [README](./bash_profile.d/README.md) there.
 └── README.md
 ```
 
-___version___: 2019-04-12-1615
+___version___: 2019-04-16-1544
