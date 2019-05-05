@@ -71,7 +71,7 @@ while getopts :p:m:w:E:M:kA:h options ; do
       requested_CPU="$OPTARG"
       ;;
     m)
-      #hlp   -m <ARG>   Memory (MB)
+      #hlp   -m <ARG>   Memory (MB) per processor
       requested_memory="$OPTARG"
       ;;
     w)
@@ -158,14 +158,6 @@ else
   echo "#SBATCH --account='$qsys_account'" >> "$submitfile"
 fi
 
-if [[ -n $local_python_environment ]] ; then
-  # Activate python environment
-  # . ~/local/python/local_env/pysisiphus/bin/activate
-  echo ". '$local_python_environment'" >> "$submitfile"
-else
-  debug "No local python environment set."
-fi
-
 if (( ${#use_modules[@]} > 0 )) ; then
   # Load modules
   for module in "${use_modules[@]}" ; do
@@ -173,6 +165,14 @@ if (( ${#use_modules[@]} > 0 )) ; then
   done
 else
   debug "No modules in use."
+fi
+
+if [[ -n $local_python_environment ]] ; then
+  # Activate python environment
+  # . ~/local/python/local_env/pysisiphus/bin/activate
+  echo ". '$local_python_environment'" >> "$submitfile"
+else
+  debug "No local python environment set."
 fi
 
 # Enter work directory
