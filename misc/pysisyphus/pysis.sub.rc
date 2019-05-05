@@ -1,0 +1,27 @@
+#!/bin/bash
+# This is an example configuration file
+# Modify it and place it on
+#   "$HOME/.pysis.subrc"
+# or 
+#   "$HOME/.config/pysis.sub.rc"
+#
+
+# Specify queueing system (this has only naming purpose)
+queue="slurm"
+# Directly submit to 'sbatch' (default: true; options: true/false)
+submit="true"
+# How many processors should be requested (integer)
+requested_CPU=8
+# How much memory should be requested in MB (integer)
+requested_memory=2000
+# How many hours of walltime should be requested (integer)
+requested_walltime=24
+# Which local environment should be activated
+# local_python_environment="~/local/python/local_env/pysisiphus/bin/activate" # (example)
+local_python_environment=""
+# Which modules should be loaded (array)
+# use-modules=( "CHEMISTRY" "xtb" "gaussian/16.b01_bin" ) # (example)
+use_modules=()
+
+#
+# End of configuration
