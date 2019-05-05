@@ -58,7 +58,12 @@ requested_walltime=24
 local_python_environment=""
 use_modules=()
 
-while getopts :p:m:w:E:M:kh options ; do
+#shellcheck source=.pysis.subrc
+[[ -e "$HOME/.pysis.subrc" ]] && . "$HOME/.pysis.subrc"
+#shellcheck source=pysis.sub.rc
+[[ -e "$HOME/.config/pysis.sub.rc" ]] && . "$HOME/.config/pysis.sub.rc"
+
+while getopts :p:m:w:E:M:kA:h options ; do
   #hlp OPTIONS:
   case $options in
     p)
@@ -85,6 +90,10 @@ while getopts :p:m:w:E:M:kh options ; do
       #hlp   -k         Keep submission script, do not submit.
       submit="false"
       ;;
+    A)
+      #hlp   -A <ARG>   Specify account
+      qsys_account="$OPTARG"
+      ;;
     h)
       #hlp   -h         This help file.
       usage
@@ -95,6 +104,17 @@ while getopts :p:m:w:E:M:kh options ; do
     \?)
       fatal "Invalid option: -$OPTARG."
   esac
+  #hlp 
+  #hlp SETTINGS:
+  #hlp   queue="$queue"
+  #hlp   submit="$submit"
+  #hlp   requested_CPU=$requested_CPU
+  #hlp   requested_memory=$requested_memory
+  #hlp   requested_walltime=$requested_walltime
+  #hlp   local_python_environment="$local_python_environment"
+  #hlp   use_modules=( ${use_modules[*]} )
+  #hlp   qsys_account="$qsys_account"
+  #hlp 
 done
 
 shift $(( OPTIND - 1 ))
@@ -113,11 +133,6 @@ output_log="$jobname.log"
 submitfile="$jobname.$queue.bash"
 debug "create '$submitfile'"
 
-#shellcheck source=.pysis.subrc
-[[ -e "$HOME/.pysis.subrc" ]] && . "$HOME/.pysis.subrc"
-#shellcheck source=pysis.sub.rc
-[[ -e "$HOME/.config/pysis.sub.rc" ]] && . "$HOME/.config/pysis.sub.rc"
-
 cat > "$submitfile" <<-END-of-header
 #!/usr/bin/env bash
 #SBATCH --nodes=1
@@ -135,6 +150,12 @@ if [[ ${PWD} =~ [Hh][Pp][Cc][Ww][Oo][Rr][Kk] ]] ; then
   debug "Detected usage of HPCWORK."
   echo "#SBATCH --constraint=hpcwork" >> "$submitfile"
   echo '' >> "$submitfile"
+fi
+
+if [[ "$qsys_account" =~ ^(|0|[Dd][Ee][Ff][Aa]?[Uu]?[Ll]?[Tt]?)$ ]] ; then
+  message "No account selected."
+else
+  echo "#SBATCH --account='$qsys_account'" >> "$submitfile"
 fi
 
 if [[ -n $local_python_environment ]] ; then
@@ -165,6 +186,8 @@ cat >> "$submitfile" <<-END-of-body
 
 echo "Done: \$(date)"
 END-of-body
+
+debug "$( cat "$submitfile" )"
 
 queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
 
