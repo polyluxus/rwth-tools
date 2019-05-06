@@ -200,15 +200,22 @@ cat >> "$submitfile" <<-END-of-body
 echo "${wrapper:-srun} pysis '$input_yaml' > '$output_log'"
 ${wrapper:-srun} pysis '$input_yaml' > '$output_log'
 
+echo "Directory Contents:"
 ls -lAh
+echo ""
 
+echo "Creating archive:"
 # Create zipfile
 if command -v tar ; then
   tar -vczf "$PWD/${jobname}.data.tgz" .
+  cycle_files=( cycle*.trj )
+  cp -v -- "\${cycle_files[-1]}" "$PWD"
+  echo "Runing pysis --fclean"
   pysis --fclean
 fi
 
 # Move back everything relevant (no clobber to prevent overwriting original data)
+echo "Moving remaining files (no clobbering)."
 mv -nv -- * "$PWD/"
 for file in * ; do 
   if cmp -s -- "\$file" "$PWD/\$file" ; then
