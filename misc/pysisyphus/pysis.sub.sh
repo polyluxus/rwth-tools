@@ -75,7 +75,7 @@ while getopts :p:m:w:E:M:kA:h options ; do
       requested_memory="$OPTARG"
       ;;
     w)
-      #hlp   -W <ARG>   Walltime (hours)
+      #hlp   -w <ARG>   Walltime (hours)
       requested_walltime="$OPTARG"
       ;;
     E)
@@ -142,7 +142,7 @@ cat > "$submitfile" <<-END-of-header
 #SBATCH --time=$requested_walltime:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --job-name="$jobname"
-#SBATCH --output='$jobname.oe%J'
+#SBATCH --output='$PWD/${submitfile}.oe%J'
 
 END-of-header
 # It is necessary to implement the constraints for the CLAIX18 because of the sometimes failing hpcwork
@@ -158,8 +158,24 @@ else
   echo "#SBATCH --account='$qsys_account'" >> "$submitfile"
 fi
 
+# Create a temporary working directory,
+# then copy the existing content to this directory,
+# and change to it.
+cat >> "$submitfile" <<-END-of-dirs
+# Create temporary working diretory
+pysis_tmpdir="\$( mktemp --directory --tmpdir )"
+# Copy all files to working directory
+cp -v -- "$PWD"/* "\$pysis_tmpdir/" || exit 1
+# Enter work directory
+cd -- "\$pysis_tmpdir" || exit 1
+pwd
+
+END-of-dirs
+
 if (( ${#use_modules[@]} > 0 )) ; then
   # Load modules
+  # Export current module path to be sure
+  echo "MODULEPATH='$MODULEPATH'" >> "$submitfile"
   for module in "${use_modules[@]}" ; do
     echo "module load '$module'" >> "$submitfile"
   done
@@ -175,14 +191,32 @@ else
   debug "No local python environment set."
 fi
 
-# Enter work directory
-echo "cd '$PWD' || exit 1" >> "$submitfile"
 
-# Write execution statement
+# Then run pysisyphus.
+# Then create an archive with all data.
+# Then run the cleanup mode of pysisyphus.
 cat >> "$submitfile" <<-END-of-body
-
 # Run pysisyphus
-"${wrapper:-srun}" pysis "$input_yaml" > "$output_log"
+echo "${wrapper:-srun} pysis '$input_yaml' > '$output_log'"
+${wrapper:-srun} pysis '$input_yaml' > '$output_log'
+
+ls -lAh
+
+# Create zipfile
+if command -v tar ; then
+  tar -vczf "$PWD/${jobname}.data.tgz" .
+  pysis --fclean
+fi
+
+# Move back everything relevant (no clobber to prevent overwriting original data)
+mv -nv -- * "$PWD/"
+for file in * ; do 
+  if cmp -s -- "\$file" "$PWD/\$file" ; then
+    rm -v -- "\$file"
+  else
+    mv -v -- "\$file" "\$( mktemp --tmpdir="$PWD" "\${file}.back.XXXX" )"
+  fi
+done
 
 echo "Done: \$(date)"
 END-of-body
