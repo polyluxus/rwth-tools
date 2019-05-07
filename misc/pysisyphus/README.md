@@ -17,5 +17,5 @@ and load modules for the used quantum chemistry packages.
    place and edit the `pysis.sub.rc` in your `HOME/.config`
 
 
-___version___: 2019-05-00-0000
+___version___: 2019-05-07-1646
 
