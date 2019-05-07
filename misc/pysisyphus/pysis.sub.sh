@@ -32,6 +32,7 @@ message ()
 
 debug ()
 { 
+  [[ "$debug_mode" == "true" ]] || return 0
   local line
   while read -r line || [[ -n $line ]] ; do
     echo "DEBUG:  $line" >&2
@@ -63,7 +64,7 @@ use_modules=()
 #shellcheck source=pysis.sub.rc
 [[ -e "$HOME/.config/pysis.sub.rc" ]] && . "$HOME/.config/pysis.sub.rc"
 
-while getopts :p:m:w:E:M:kA:h options ; do
+while getopts :p:m:w:E:M:kA:Dh options ; do
   #hlp OPTIONS:
   case $options in
     p)
@@ -93,6 +94,10 @@ while getopts :p:m:w:E:M:kA:h options ; do
     A)
       #hlp   -A <ARG>   Specify account
       qsys_account="$OPTARG"
+      ;;
+    D)
+      #hlp   -D         Debug mode.
+      debug_mode=true
       ;;
     h)
       #hlp   -h         This help file.
@@ -159,11 +164,21 @@ else
 fi
 
 # Create a temporary working directory,
+# write cleanup routine and trap it (in case of killed calculation),
 # then copy the existing content to this directory,
 # and change to it.
 cat >> "$submitfile" <<-END-of-dirs
 # Create temporary working diretory
 pysis_tmpdir="\$( mktemp --directory --tmpdir )"
+# Emergency cleanup (only relevant if the script does not run through)
+emergency_cleanup ()
+{
+  echo "Job was killed, copying back everything."
+  mv -v -r -- "\$pysis_tmpdir" "${jobname}.slurm.scratch.\$SLURM_JOB_ID"
+  exit 1 
+}
+trap emergency_cleanup SIGINT
+
 # Copy all files to working directory
 cp -v -- "$PWD"/* "\$pysis_tmpdir/" || exit 1
 # Enter work directory
@@ -199,6 +214,7 @@ cat >> "$submitfile" <<-END-of-body
 # Run pysisyphus
 echo "${wrapper:-srun} pysis '$input_yaml' > '$output_log'"
 ${wrapper:-srun} pysis '$input_yaml' > '$output_log'
+exit_status=\$?
 
 echo "Directory Contents:"
 ls -lAh
@@ -226,12 +242,17 @@ for file in * ; do
 done
 
 echo "Done: \$(date)"
+exit \$exit_status
 END-of-body
 
+message "Written '$submitfile'."
 debug "$( cat "$submitfile" )"
 
-queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
-
-[[ "$submit" == "true" ]] && message "$( "$queue_cmd" "$submitfile" )"
+if [[ "$submit" == "true" ]] ; then 
+  queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
+  message "$( "$queue_cmd" "$submitfile" )"
+else
+  message "Use 'sbatch $submitfile' to submit to $queue."
+fi
 
 message "$scriptname done."
