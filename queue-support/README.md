@@ -36,11 +36,19 @@ Directories:
     If you use the [`dotfiles`](/dotfiles/) of this repository,
     you can simply copy it to the recommended `~/local/bash_profile.d/` directory,
     from which it will be sourced automatically.
+  * `myslurm.rc` is an example configuration file.
 
 ## Installation
 
 Copy or link the executable script(s) to a directory found on your `PATH` variable.
 In most cases, no set-up is required.
+If you want persistent options set, you can use the example rc file 
+and copy it to (one of) these locations, which will all be sourced if they exist:
+
+1. '/etc/myslurm.rc'          (loaded first)
+2. '$HOME/.myslurmrc' 
+3. '$HOME/.config/myslurm.rc' (loaded last, i.e. superior)
+
 The scripts should work with bash and the queueing system as its only dependencies.
  
 Additionally `mymail_slurm.sh`, uses `mail`, which can be configured to use a substitute program.

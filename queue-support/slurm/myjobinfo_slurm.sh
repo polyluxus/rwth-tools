@@ -8,21 +8,39 @@ else
 fi
 
 sacct_format_default="JobID,JobName,WorkDir,Cluster,User,Group,Account,Partition,State,ExitCode,"
-sacct_format_default+="AllocCPU,AllocNodes,CPUTime,CPUTimeRAW,Elapsed,ElapsedRaw,"
+sacct_format_default+="AllocCPU,AllocNodes,CPUTime,CPUTimeRAW,Elapsed,ElapsedRaw,ReqMEM,MaxRSS,"
 sacct_format_default+="Submit,Start,End"
-declare -- only_two
+declare -- only_two include_seff
 
 #hlp The script is an interface to the sacct command to reformat the output.
 #hlp 
 #hlp Usage:
 #hlp   ${0##*/} [option(s)] jobid
-#hlp   
+#hlp
+
+#hlp Configuration files:
+#hlp   '/etc/myslurm.rc'          (loaded first)
+#hlp   '$HOME/.myslurmrc' 
+#hlp   '$HOME/.config/myslurm.rc' (loaded last, i.e. superior)
+#hlp
+
+# Source a global configuration
+#shellcheck source=myslurm.rc
+[[ -r "/etc/myslurm.rc" ]] && . "/etc/myslurm.rc"
+#shellcheck source=myslurm.rc
+[[ -r "$HOME/.myslurmrc" ]] && . "$HOME/.myslurmrc"
+#shellcheck source=myslurm.rc
+[[ -r "$HOME/.config/myslurm.rc" ]] && . "$HOME/.config/myslurm.rc"
+
+# Declare default seff command:
+seff_cmd="${seff_cmd:-seff}"
+
 OPTIND=1
 
-while getopts :f:Fmh options ; do
+while getopts :f:Fmeh options ; do
   #hlp Options:
   case $options in
-    #hlp      -f           Show different fields than coded within this script.
+    #hlp      -f <ARG>     Show different fields than coded within this script.
     #hlp                   (default: $sacct_format_default)
     #hlp
     f)
@@ -40,6 +58,13 @@ while getopts :f:Fmh options ; do
     #hlp
     m)
       only_two=true
+      ;;
+
+    #hlp      -e           Include the output of the efficiency script (seff, if installed)
+    #hlp                   (default: $include_seff)
+    #hlp
+    e)
+      include_seff="true"
       ;;
 
     #hlp      -h           Show this help file and exit.  
@@ -73,6 +98,11 @@ while [[ -n $1 ]] ; do
   echo "Ignoring: $1" >&2
   shift
 done
+
+# the part about seff goes here
+if [[ "$include_seff" == "true" ]] ; then
+  command -v "$seff_cmd" &> /dev/null && "$seff_cmd" "$show_jobid"
+fi
 
 sacct_format="${sacct_format:-$sacct_format_default}"
 while read -r line || [[ -n $line ]] ; do
