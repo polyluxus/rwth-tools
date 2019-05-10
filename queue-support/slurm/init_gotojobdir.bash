@@ -1,5 +1,5 @@
 #!/bin/bash
-# ___version___: 2019-05-10-1117
+# ___version___: 2019-05-10-1316
 
 if (return 0 2>/dev/null) ; then
   # [How to detect if a script is being sourced](https://stackoverflow.com/a/28776166/3180795)
