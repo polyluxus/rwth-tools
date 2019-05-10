@@ -5,10 +5,12 @@ if ! command -v sacct &> /dev/null ; then
   exit 1
 fi
 
+# set defaults
 sacct_format_default="JobID,JobName,WorkDir,Cluster,User,Group,Account,Partition,State,ExitCode,"
 sacct_format_default+="AllocCPU,AllocNodes,CPUTime,CPUTimeRAW,Elapsed,ElapsedRaw,ReqMEM,MaxRSS,"
 sacct_format_default+="Submit,Start,End"
-declare -- only_two include_seff
+only_two="false"
+include_seff="false"
 
 #hlp The script is an interface to the sacct command to reformat the output.
 #hlp 
@@ -65,6 +67,13 @@ while getopts :f:Fmeh options ; do
       include_seff="true"
       ;;
 
+    #hlp      -E           Exclude the output of the efficiency script (seff)
+    #hlp                   (Overwrite configuration settings and -e switch.)
+    #hlp
+    e)
+      include_seff="true"
+      ;;
+
     #hlp      -h           Show this help file and exit.  
     #hlp
     h)
@@ -116,6 +125,6 @@ while read -r line || [[ -n $line ]] ; do
     printf '%-20s: %s\n' "${header[index]}" "${body[index]}"
   done
   printf '==================================================\n\n'
-  [[ -n $only_two ]] && break # breakout
+  [[ "$only_two" == "true" ]] && break # breakout
 done < <( sacct --jobs="$show_jobid" --parsable --format="$sacct_format" )
 
