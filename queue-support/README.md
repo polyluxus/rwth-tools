@@ -66,4 +66,4 @@ command and execute the correct script.
 it should work without configuration/edit on the new CLAIX18 and the old BULL clusters.
 Note that the latter is decommissioned in April 2019.)
 
-___version___: 2019-04-16-1544
+___version___: 2019-05-10-1117

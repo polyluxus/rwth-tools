@@ -1,8 +1,6 @@
 #!/bin/bash
 
-if command -v squeue &> /dev/null ; then
-  :
-else
+if ! command -v squeue &> /dev/null ; then
   echo "This script is a wrapper to 'squeue', but the command was not found."
   exit 1
 fi
@@ -95,7 +93,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-04-16-1544
+#hlp  ___version___: 2019-05-10-1117
 
 if [[ -n $long_format_jobids ]] ; then
   number_jobs=0

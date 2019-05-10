@@ -1,6 +1,6 @@
 #!/bin/bash
 # Tiny chooser script, rwth-tools
-# ___version___: 2019-04-16-1544
+# ___version___: 2019-05-10-1117
 
 if command -v bjobs &> /dev/null ; then
   if command -v myq_bjobs &> /dev/null ; then
