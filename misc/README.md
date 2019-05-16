@@ -41,7 +41,7 @@ This directory also includes an (unsorted) list of recommended software and reso
 [`recommended-software.md`](./recommended-software.md), or view it online at 
 [GitHub](https://github.com/polyluxus/rwth-tools/blob/master/misc/recommended-software.md).
 
-___version___: 2019-05-07-1646
+___version___: 2019-05-16-1633
 
 ## Additional resources
 
