@@ -17,7 +17,7 @@ usage ()
     echo "  -A <ARG>    Account to use."
     echo "  -k          Keep submission script."
     echo "  -D          Debug mode with (much) more information."
-    echo "INFO:  [ ___version___: 2019-04-16-1544 ]"
+    echo "INFO:  [ ___version___: 2019-05-17-1850 ]"
   } >&2
   exit 0
 }
