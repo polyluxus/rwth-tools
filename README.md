@@ -9,4 +9,4 @@ This probably goes without saying, but here we go anyway:
 There is also absolutely no warranty in any case. 
 If you decide to use any of the scripts or files, it is entirely your resonsibility.
 
-___version___: 2019-05-17-1850
+___version___: 2019-06-17-2012
