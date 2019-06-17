@@ -2,7 +2,7 @@
 
 if [[ "$1" == -h ]] ; then
   echo "This script starts JabRef, being able to update first."
-  echo "Usage: ${0##*/} [debug] [update]"
+  echo "Usage: ${0##*/} [debug] [update] <jabref arguments>"
   echo "___version___: 2019-04-16-1544"
   exit 0
 fi
@@ -17,7 +17,7 @@ testcommand ()
   if command -v "$1" &> /dev/null ; then
     debug "Found '$1'"
   else
-    echo "This updater needs '$1' to work."
+    echo "This script needs '$1' to work."
     exit 1
   fi
 }
@@ -140,7 +140,8 @@ run_jabref ()
   testcommand java
   debug "Starting: $jabref_jar"
   debug "Logfile: $jabref_logfile"
-  java -jar "$jabref_jar" "$@" &> "$jabref_logfile"
+  java -showversion -jar "$jabref_jar" "$@" &> "$jabref_logfile" || return 1
+  return 0
 }
 
 # 
@@ -168,8 +169,11 @@ if [[ -z $jabref_jar ]] ; then
   jabref_jar="$(get_jabref_jar "$jabref_install_dir")" || exit 1
 fi
 
-run_jabref "$@"
-
-exec 3>&-
-
+if run_jabref "$@" ; then
+  exec 3>&- 
+else 
+  exec 3>&- 
+  echo "Jabref ended with an error, see $jabref_logfile for details." >&2 
+  exit 1
+fi
 

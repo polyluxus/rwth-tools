@@ -24,16 +24,24 @@ your `PATH` to the script.
 I suggest `~/bin`.
 The execute it with 
 ```
-runJabRef.bash [debug] update <JabRef arguments>
+runJabRef.bash [debug] update 
 ```
 to get the latest release.
 The debug switch gives some statements, if something does not go according to plan.
 Without any wrapper switches, it will simply call the most recent java file.
 
 ```
-runJabRef.bash <JabRef arguments>
+runJabRef.bash [debug] <JabRef arguments>
 ```
+A very brief description is given with the `-h` switch.
 
+JabRef requires Java 8.
+JavaFX is not included in every runtime or development kit, 
+therefore they recommend Oracle Java 8. 
+However, since the recent license change, the Oracle packages have been removed from CLAIX18.
+The installed OpenJDK packages that shall replace them do not include JavaFX.
+As an alternative you can install ZuluFX, further instructions on how to do that can be found
+in the modules tree of this repository: [ZuluJDK](../../modules/modulefiles/source/zulujdk/README.md).
 
 ___version___: 2019-04-16-1544
 
