@@ -1,0 +1,82 @@
+#%Module1.0###-*-tcl-*-#########################################################
+##
+## ZuluFX modulefile
+## https://www.azul.com/downloads/zulu/
+###
+#
+set modulefamily "java"
+set modulename "zulujdk"
+# Necessary for local installs
+set USERHOME "$::env(HOME)"
+
+# Use the source directory from RWTH cluster
+# (This is taken from the orignial module file)
+set module_global_base_path "/usr/local_rwth/modules/modulefiles/source"
+# Use some functions
+source "$module_global_base_path/FUNCTIONS/output"
+source "$module_global_base_path/FUNCTIONS/usage_log"
+# (Not really necessary for local installs)
+log_module_load $modulename/$version
+
+# Define local variable with path to installation software
+# version will be set by referring module file
+set SOFTWARE "${USERHOME}/local/$modulefamily/$modulename-$version"
+
+# Differ between different platforms (originally), 
+# e.g. if the path depends on the plattform
+# (Removed because there is no reference to that further on,
+# as it is a precompiled package.)
+
+# This is the help output, printed by "module help"
+proc ModulesHelp { } {
+  # define the global variables version and modulename in this function
+  global version
+  global modulename
+  puts stderr "*** This module initialises the $modulename $version environment           ***"
+  puts stderr "    A Zulu build of OpenJDK including OpenJFX.                                "
+  puts stderr "    More information: https://www.azul.com/downloads/zulu/                    "
+}
+
+# Short description (preferably 1 line) what the loaded software does,
+# or what the module is good for. 
+# Printed by "module whatis":
+module-whatis  "$modulename is a build of the OpenJDK including OpenJFX"
+
+# If module should be loaded, check for conflicts and print info
+switch [module-info mode] {
+  load {     
+    # Is this module already loaded?
+    set conflict "$modulename/$version"
+    if { [is-loaded $conflict]} {
+      m_warning "$conflict already loaded, doing nothing"
+      return
+    }
+    # Is a different version already loaded? (add more cases for different Java bundles)
+    set conflict $modulename 
+    if { [is-loaded $conflict]} {
+      m_error "$conflict already loaded and conflicts with $modulename/$version.\nTry unloading $conflict first"
+      exit
+    }
+    # Check if the software is really installed, if not error and abort.
+    if { ![file isdirectory $SOFTWARE] } {
+      m_error "This software is not installed on this machine. Please try another one.\n"
+      exit
+    }
+    # Nothing failed, print a success message:
+    m_success "Loading $modulename $version"
+  }
+  unload {
+    m_success "Unloading $modulename $version"
+  }
+}
+
+# The following paths need to be set/adjusted for the 6.0 distributions
+prepend-path  PATH      $SOFTWARE/bin
+prepend-path  MANPATH   $SOFTWARE/man
+
+setenv        JAVA_HOME $SOFTWARE
+
+# ATTENTION (from RWTH module file)
+# Do NOT use m_error, m_success, m_warning or puts stderr 
+# outside of an conditional expression!
+# elsewise this will be printed on every load, unload and even whatis command!
