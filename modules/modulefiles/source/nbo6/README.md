@@ -80,5 +80,5 @@ if you do, don't forget the hidden `[...]/modulefiles/source/nbo6/.version`.
 Check with `module avail` if the new module file is recognised.
 You should now be able to load it with `module load nbo6`.
 
-___version___: 2019-06-19-0000
+___version___: 2019-06-19-1142
 
