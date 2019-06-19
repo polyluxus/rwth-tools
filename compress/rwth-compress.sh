@@ -15,6 +15,8 @@ usage ()
     echo "  -q <ARG>    Use <ARG> as queueing system."
     echo "              (Currently supported: slurm [default], busb)"
     echo "  -A <ARG>    Account to use."
+    echo "  -j <ARG>    Wait for JobID <ARG>."
+    echo "              Can be specified multiple times. Only available for SLURM."
     echo "  -k          Keep submission script."
     echo "  -D          Debug mode with (much) more information."
     echo "INFO:  [ ___version___: 2019-05-17-1850 ]"
@@ -91,7 +93,7 @@ clean_script="delete"
 strip_user_level="false"
 account="default"
 
-while getopts :uq:A:khD options ; do
+while getopts :uq:A:j:khD options ; do
   case $options in
     u)
       strip_user_level="true"
@@ -105,6 +107,9 @@ while getopts :uq:A:khD options ; do
       ;;
     A)
       account="$OPTARG"
+      ;;
+    j)
+      dependency+=":$OPTARG"
       ;;
     k)
       clean_script="keep"
@@ -291,6 +296,11 @@ elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
 	#SBATCH --output='${logdir}/compress.${usename}.o%J'
 	#SBATCH --error='${logdir}/compress.${usename}.e%J'
 	END-of-header
+  if [[ -n "$dependency" ]] ; then
+    # Dependency is stored in the form ':jobid:jobid:jobid'
+    # which should be recognised by SLURM 
+    echo "#SBATCH --depend=afterok$dependency" >&9
+  fi
   # It is necessary to implement the constraints for the CLAIX18 because of the sometimes failing hpcwork
   for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
     [[ ${check_hpc%%/*/} =~ hpc ]] || continue
