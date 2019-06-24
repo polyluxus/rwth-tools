@@ -5,7 +5,7 @@
 #
 # This script downloads and reformats the actual basis set files.
 #
-# ___version___: 2019-04-16-1544
+# ___version___: 2019-06-24-1724
 
 debug ()
 {

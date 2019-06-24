@@ -1,0 +1,6 @@
+#%Module1.0###-*-tcl-*-#########################################################
+##
+## ZuluFx versionfile
+##
+
+set ModulesVersion "8u212"

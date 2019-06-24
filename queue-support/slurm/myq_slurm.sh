@@ -1,13 +1,9 @@
 #!/bin/bash
 
-if command -v squeue &> /dev/null ; then
-  :
-else
+if ! command -v squeue &> /dev/null ; then
   echo "This script is a wrapper to 'squeue', but the command was not found."
   exit 1
 fi
-
-declare -- show_full_path="false"
 
 #hlp The script is an interface to the squeue command to reformat the output.
 #hlp It will only show running and pending jobs.
@@ -15,6 +11,23 @@ declare -- show_full_path="false"
 #hlp Usage:
 #hlp   ${0##*/} [option(s)]
 #hlp   
+
+#hlp Configuration files:
+#hlp   '/etc/myslurm.rc'          (loaded first)
+#hlp   '$HOME/.myslurmrc' 
+#hlp   '$HOME/.config/myslurm.rc' (loaded last, i.e. superior)
+#hlp
+
+# Source a global configuration
+#shellcheck source=myslurm.rc
+[[ -r "/etc/myslurm.rc" ]] && . "/etc/myslurm.rc"
+#shellcheck source=myslurm.rc
+[[ -r "$HOME/.myslurmrc" ]] && . "$HOME/.myslurmrc"
+#shellcheck source=myslurm.rc
+[[ -r "$HOME/.config/myslurm.rc" ]] && . "$HOME/.config/myslurm.rc"
+
+show_full_path="${show_full_path:-false}"
+
 OPTIND=1
 
 while getopts :fFl:u:A:h options ; do
@@ -33,18 +46,11 @@ while getopts :fFl:u:A:h options ; do
       ;;
 
     #hlp      -l <JOBID>   Print the long format of the information of the job with <JOBID>
-    #hlp                   May be specified multiple times and will also print the normal summary.
-    #hlp                   (WORK IN PROGRESS)
+    #hlp                   May be specified multiple times, will suppress the normal summary.
+    #hlp                   <JOBID> can also contain multiple comma-separated (no spaces) IDs.
     #hlp
     l)
-      while read -r line || [[ -n $line ]] ; do
-        [[ $read_header != "off" ]] && { IFS='|' read -r -a header <<< "$line" ; read_header=off ; continue ; }
-        IFS='|' read -r -a body <<< "$line"
-      done < <( squeue --jobs="$OPTARG" --format="%all" )
-      for index in "${!header[@]}" ; do
-        printf '%-20s: %s\n' "${header[index]}" "${body[index]}"
-      done
-      printf '\n===================================\n\n'
+      long_format_jobids="$long_format_jobids,$OPTARG"
       ;;
 
     #hlp      -u <USER>    Show for specific user <USER> (default: $USER)
@@ -87,7 +93,28 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-04-16-1544
+#hlp  ___version___: 2019-06-24-1724
+
+if [[ -n $long_format_jobids ]] ; then
+  number_jobs=0
+  while read -r line || [[ -n $line ]] ; do
+    [[ $read_header != "off" ]] && { IFS='|' read -r -a header <<< "$line" ; read_header=off ; continue ; }
+    IFS='|' read -r -a current_body <<< "$line"
+    body+=( "${current_body[@]}" )
+    unset current_body
+    (( number_jobs++ ))
+  done < <( squeue --jobs="${long_format_jobids#,}" --format="%all" )
+  printed_jobs=0
+  while (( printed_jobs < number_jobs )) ; do
+    for index in "${!header[@]}" ; do
+      body_index=$(( index + printed_jobs * ${#header[@]} ))
+      printf '%-20s: %s\n' "${header[index]}" "${body[body_index]}"
+    done
+    printf '\n===================================\n\n'
+    (( printed_jobs++ ))
+  done
+  exit 0
+fi
 
 declare -i width_total
 width_total=$(tput cols)

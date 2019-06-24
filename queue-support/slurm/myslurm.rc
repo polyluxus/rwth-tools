@@ -1,0 +1,63 @@
+#!/bin/bash
+#shellcheck disable=SC2034
+
+# This is an example configuration reproducing the default values.
+# It can be used to configure all three scripts of the series
+
+#####
+# 
+# myjobinfo_slurm.sh
+#
+# Dependencies:
+#   seff         See https://github.com/SchedMD/slurm/tree/master/contribs/seff for details
+seff_cmd=seff
+#
+# Options:
+#   -f <ARG>     Show different fields than hard-coded within the script.
+sacct_format="JobID,JobName,WorkDir,Cluster,User,Group,Account,Partition,State,ExitCode,AllocCPU,AllocNodes,CPUTime,CPUTimeRAW,Elapsed,ElapsedRaw,ReqMEM,MaxRSS,Submit,Start,End"
+#   -m           Show only one line (presumably the main line) for the job
+#                The default is false, set to 'true' to enable.
+only_two=false
+#   -e           Include the output of the efficiency script (seff, if installed)
+#                The default is false, set to 'true' to enable.
+include_seff=false
+#
+#####
+
+#####
+# 
+# mymail_slurm.sh
+#
+# Dependencies:
+#   mail         or another mail program capable of sending email
+mail_cmd=mail
+#                Define options which should be used as a bash-array:
+mail_cmd_opts=()
+#
+#   myjobinfo_slurm.sh
+#                This is the information retrieving script of this bundle (see above)
+myjobinfo="myjobinfo_slurm.sh"
+#                Define options which should be used as a bash-array:
+myjobinfo_opts=()
+#                For example only seff and the main output:
+# myjobinfo_opts=( -e -m )
+#
+# Options:
+#   -I           Run from within the job script. Do not use it as interface 'MailProg' for the queueing system.
+#                The default is false, set to 'true' to enable.
+from_within=false
+#
+#####
+
+#####
+# 
+# myq_slurm.sh
+#
+# Options:
+#   -f / -F      Show full path (true) or suppress path completely (none), the default is to truncate it to fit the window (false)
+show_full_path=false
+#
+####
+
+# ___version___: 2019-04-16-1544
+# End of configuration

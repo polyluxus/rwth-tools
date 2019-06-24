@@ -10,10 +10,16 @@ usage ()
     echo "       where it will default to first create a tar archive and use zstd to compress it."
     echo "       (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)"
     echo "OPTION:"
+    echo "  -u          Strip user level from source directory."
+    echo "              Try to change to user level directory before archive creation."
     echo "  -q <ARG>    Use <ARG> as queueing system."
     echo "              (Currently supported: slurm [default], busb)"
+    echo "  -A <ARG>    Account to use."
+    echo "  -j <ARG>    Wait for JobID <ARG>."
+    echo "              Can be specified multiple times. Only available for SLURM."
     echo "  -k          Keep submission script."
-    echo "       [ ___version___: 2019-04-16-1544 ]"
+    echo "  -D          Debug mode with (much) more information."
+    echo "INFO:  [ ___version___: 2019-06-24-1724 ]"
   } >&2
   exit 0
 }
@@ -24,11 +30,20 @@ fatal ()
   exit 1
 }
 
-debug ()
-{ 
+message ()
+{
   local line
   while read -r line || [[ -n $line ]] ; do
     echo "INFO:  $line" >&2
+  done <<< "$*"
+}
+
+debug ()
+{ 
+  [[ "$debug_mode" == "true" ]] || return
+  local line
+  while read -r line || [[ -n $line ]] ; do
+    echo "DEBUG:  $line" >&2
   done <<< "$*"
 }
 
@@ -73,10 +88,16 @@ fi
 
 OPTIND=1
 queue="slurm"
+debug_mode="false"
 clean_script="delete"
+strip_user_level="false"
+account="default"
 
-while getopts :q:kh options ; do
+while getopts :uq:A:j:khD options ; do
   case $options in
+    u)
+      strip_user_level="true"
+      ;;
     q)
       queue="$OPTARG"
       debug "Selected queue: $queue"
@@ -84,8 +105,17 @@ while getopts :q:kh options ; do
         fatal "Invalid argument for option -q: $queue"
       fi
       ;;
+    A)
+      account="$OPTARG"
+      ;;
+    j)
+      dependency+=":$OPTARG"
+      ;;
     k)
       clean_script="keep"
+      ;;
+    D)
+      debug_mode="true"
       ;;
     h)
       usage
@@ -205,6 +235,13 @@ esac
 source_directory=$(is_readable_directory "$2") || fatal "Directory does not exist ($2)."
 usename="${source_directory//\//%}"
 
+if [[ "$strip_user_level" == "true" ]] ; then
+  strip_user_directory="${source_directory%%/${USER}*}/$USER"
+  cleaned_source_directory="${source_directory##$strip_user_directory/}"
+else
+  debug "Not stripping user level directory."
+fi
+
 # debug "$tar_cmd -cf '$target_tar_filename' '$source_directory'"
 # debug "$zstd_cmd -v -9 '$target_tar_filename' -o '$target_zip_filename'"
 
@@ -231,7 +268,6 @@ if [[ $queue =~ ([Bb][Ss][Uu][Bb]) ]] ; then
 	#BSUB -J compress.${usename}
 	#BSUB -o ${logdir}/compress.${usename}.o%J
 	#BSUB -e ${logdir}/compress.${usename}.e%J
-	
 	END-of-header
   for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
     [[ ${check_hpc%%/*/} =~ hpc ]] || continue
@@ -240,6 +276,12 @@ if [[ $queue =~ ([Bb][Ss][Uu][Bb]) ]] ; then
     echo '' >> "$submitfile"
     break
   done
+  if [[ "$account" =~ ^[Dd][Ee][Ff][Aa][Uu][Ll][Tt]$ ]] ; then
+    debug "No account selected."
+  else
+    echo "#BSUB -P $account" >> "$submitfile"
+  fi
+  echo "" >> "$submitfile"
   queue_cmd=$(command -v bsub) || fatal "Comand not found (bsub)."
 elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
 	cat > "$submitfile" <<-END-of-header
@@ -253,8 +295,12 @@ elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
 	#SBATCH --job-name="compress.${usename}"
 	#SBATCH --output='${logdir}/compress.${usename}.o%J'
 	#SBATCH --error='${logdir}/compress.${usename}.e%J'
-	
 	END-of-header
+  if [[ -n "$dependency" ]] ; then
+    # Dependency is stored in the form ':jobid:jobid:jobid'
+    # which should be recognised by SLURM 
+    echo "#SBATCH --depend=afterok$dependency" >&9
+  fi
   # It is necessary to implement the constraints for the CLAIX18 because of the sometimes failing hpcwork
   for check_hpc in "$source_directory" "$target_tar_filename" "$target_zip_filename" ; do
     [[ ${check_hpc%%/*/} =~ hpc ]] || continue
@@ -263,15 +309,29 @@ elif [[ $queue =~ ([Ss][Ll][Uu][Rr][Mm]) ]] ; then
     echo '' >> "$submitfile"
     break
   done
+  if [[ "$account" =~ ^[Dd][Ee][Ff][Aa][Uu][Ll][Tt]$ ]] ; then
+    debug "No account selected."
+  else
+    echo "#SBATCH --account=$account" >> "$submitfile"
+  fi
+  echo "" >> "$submitfile"
   queue_cmd=$(command -v sbatch) || fatal "Comand not found (sbatch)."
 else
   fatal "Invalid queue: $queue"
 fi
 
 if [[ "$execution_mode" == "tgz" ]] ; then
-  echo "'$tar_cmd'  -v -czf '$target_zip_filename' '$source_directory'    2>&1 || exit 65"  >> "$submitfile"
+  if [[ "$strip_user_level" == "true" ]] ; then
+    echo "'$tar_cmd' -v -czf '$target_zip_filename' -C '$strip_user_directory' '$cleaned_source_directory' 2>&1 || exit 65"  >> "$submitfile"
+  else
+    echo "'$tar_cmd' -v -czf '$target_zip_filename' '$source_directory' 2>&1 || exit 66"  >> "$submitfile"
+  fi
 else
-  [[ -n $tar_cmd ]]   && echo "'$tar_cmd'  -v -cf  '$target_tar_filename'    '$source_directory'    2>&1 || exit 63"  >> "$submitfile"
+  if [[ "$strip_user_level" == "true" ]] ; then
+    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename' -C '$strip_user_directory' '$cleaned_source_directory' 2>&1 || exit 62"  >> "$submitfile"
+  else
+    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename'    '$source_directory'    2>&1 || exit 63"  >> "$submitfile"
+  fi
   [[ -n $zstd_cmd ]]  && echo "'$zstd_cmd' -v -9   '$target_tar_filename' -o '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
   [[ -n $gzip_cmd ]]  && echo "'$gzip_cmd' -v -9 < '$target_tar_filename' >  '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
   [[ -n $seven_cmd ]] && echo "'$seven_cmd' a -bb3 '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
@@ -280,14 +340,14 @@ fi
 
 debug "Content:"
 debug "$(cat "$submitfile")"
-echo 
+debug "" 
 
 case "${queue_cmd##*/}" in
   sbatch)
-    debug "$( "$queue_cmd" "$submitfile" )"
+    message "$( "$queue_cmd" "$submitfile" )"
     ;;
   bsub)
-    debug "$( "$queue_cmd" < "$submitfile" )"
+    message "$( "$queue_cmd" < "$submitfile" )"
     ;; 
   *)
     fatal "Not recognised command: ${queue_cmd##*/}."
@@ -297,7 +357,7 @@ esac
 if [[ $clean_script == "delete" ]] ; then
   debug "$(rm -v "$submitfile")"
 elif [[ $clean_script == "keep" ]] ; then
-  debug "Submission script '$submitfile' kept."
+  message "Submission script '$submitfile' kept."
 else
   warning "Unknown cleanup mode."
 fi

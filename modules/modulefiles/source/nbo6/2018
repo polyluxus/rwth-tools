@@ -1,0 +1,18 @@
+#%Module1.0###-*-tcl-*-#########################################################
+##
+## NBO6   modulefile
+##
+
+# For the local install (if installed in HOME)
+set module_base_path "$::env(HOME)/local/modules/modulefiles/source"
+
+# Needs to be adjusted for what is to be loaded
+set DATE "2018"
+
+# Will be read by the source module file
+set version "$DATE"
+
+# Load the source module file
+source "$module_base_path/nbo6/nbo6"
+
+###
