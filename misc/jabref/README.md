@@ -43,5 +43,5 @@ The installed OpenJDK packages that shall replace them do not include JavaFX.
 As an alternative you can install ZuluFX, further instructions on how to do that can be found
 in the modules tree of this repository: [ZuluJDK](../../modules/modulefiles/source/zulujdk/README.md).
 
-___version___: 2019-04-16-1544
+___version___: 2019-06-24-1724
 

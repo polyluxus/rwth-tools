@@ -183,5 +183,5 @@ At the time of writing the following worked:
    Then you can just go ahead and use your method of choice to find the transition state 
    and preform IRC calculations.
  
- ___version___: 2019-05-05-1508
+ ___version___: 2019-06-24-1724
  

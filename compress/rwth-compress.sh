@@ -19,7 +19,7 @@ usage ()
     echo "              Can be specified multiple times. Only available for SLURM."
     echo "  -k          Keep submission script."
     echo "  -D          Debug mode with (much) more information."
-    echo "INFO:  [ ___version___: 2019-04-16-1544 ]"
+    echo "INFO:  [ ___version___: 2019-06-24-1724 ]"
   } >&2
   exit 0
 }

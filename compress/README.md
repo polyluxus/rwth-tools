@@ -34,4 +34,4 @@ If `~/logfiles` exists (and `LOGFILES` is unset, it will use this destination.
 If neither applies, `HOME` will be the destination for logfiles. 
 (TODO: Choose location.)
 
-___version___: 2019-04-16-1544
+___version___: 2019-06-24-1724

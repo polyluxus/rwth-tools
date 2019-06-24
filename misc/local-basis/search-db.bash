@@ -6,7 +6,7 @@
 # This script is basically a frontend (to grep) to the database 
 # that was created with make-db.bash (probably in ./bse.db)
 #
-# ___version___: 2019-04-16-1544
+# ___version___: 2019-06-24-1724
 
 database_loc="$(bash make-db.bash)"
 [[ -z $1 ]] && { echo "$database_loc" ; exit 0 ; }
