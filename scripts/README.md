@@ -9,4 +9,4 @@ which I did no know where else to put.
   by Gaussview and convert it to simple xmol format.
 
 
-___version___: 2019-08-00-0000
+___version___: 2019-08-22-1746
