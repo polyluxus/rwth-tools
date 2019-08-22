@@ -1,4 +1,14 @@
-# Local basis
+# Local basis (deprecated)
+
+The scripts contained in this directory will no longer work as the interface 
+to the [Basis Set Exchange](https://www.basissetexchange.org/) has changed.
+You can follow the renewed version on GitHub, too:
+[MolSSI Basis Set Exchange](https://github.com/MolSSI-BSE).
+
+For now the directory is still provided as is, 
+but it will be removed from the repository with the next major release.
+
+---
 
 This directory contains scripts which are somewhat hastily hacked together.
 
