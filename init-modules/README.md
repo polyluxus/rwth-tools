@@ -13,4 +13,4 @@ When I mentioned to the IT service desk the security risks the current recommend
 I was told that they were working on a new implementation of the module system.
 I recently noticed that the script still has not changed, so I can only again recommend switching.
 
-___version___: 2019-06-24-1724
+___version___: 2019-08-27-1732
