@@ -12,7 +12,8 @@ module () {
   local module_cmd="modulecmd.tcl"
   local module_dir="/usr/local_rwth/modules/src"
 
-  if local -r source_autoinit=$( tclsh "$module_dir/$module_cmd" sh autoinit 2> /dev/null ) ; then
+  local -r source_autoinit=$( tclsh "$module_dir/$module_cmd" sh autoinit 2> /dev/null )
+  if [[ -n $source_autoinit ]] ; then
     $source_autoinit
     module "$@"
   else

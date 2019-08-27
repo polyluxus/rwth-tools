@@ -11,11 +11,14 @@ fi
 
 # Enable color support of ls and grep
 if command -v dircolors &> /dev/null ; then
+  # Set the environment variable LS_COLORS
   if [[ -r ~/.dircolors ]] ; then
     eval "$(dircolors -b ~/.dircolors)"
   else
     eval "$(dircolors -b)"
   fi
+
+  # Provide aliasses with color enabled (if no alias has yet been defined)
   alias ls    &> /dev/null || alias ls='ls --color=auto'
 # alias dir   &> /dev/null || alias dir='dir --color=auto'
 # alias vdir  &> /dev/null || alias vdir='vdir --color=auto'

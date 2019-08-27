@@ -9,6 +9,9 @@ else
   exit 0
 fi
 
+# Only do that for bash
+[[ "$SHELL" =~ [Bb][Aa][Ss][Hh] ]] || return
+
 # Check if tldr is installed
 # add it to bash completition
 if command -v tldr &> /dev/null ; then
