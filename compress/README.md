@@ -21,10 +21,11 @@ using this script.
 | Switch     | Function |
 |:-----------|:---------|
 | `-u`       | Strip user level from source directory. (Try to change to user level directory before archive creation.) |
-| `-q <ARG>` | select a queueing system; supported: slurm [default], bsub |
+| `-q <ARG>` | Select a queueing system; supported: slurm [default], bsub. |
 | `-A <ARG>` | Account (bsub: project) to use. |
-| `-k`       | keep the submission script |
-| `-h`       | print a help message |
+| `-k`       | Keep the submission script. |
+| `-n`       | Do not submit (dry run). |
+| `-h`       | Print a help message. |
 | `-D`       | Debug mode with (much) more information. |
 
 ## Miscellanious

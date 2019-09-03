@@ -18,6 +18,7 @@ usage ()
     echo "  -j <ARG>    Wait for JobID <ARG>."
     echo "              Can be specified multiple times. Only available for SLURM."
     echo "  -k          Keep submission script."
+    echo "  -n          Do not submit (dry run)."
     echo "  -D          Debug mode with (much) more information."
     echo "INFO:  [ ___version___: 2019-06-24-1724 ]"
   } >&2
@@ -92,8 +93,9 @@ debug_mode="false"
 clean_script="delete"
 strip_user_level="false"
 account="default"
+submit="true"
 
-while getopts :uq:A:j:khD options ; do
+while getopts :uq:A:j:knDh options ; do
   case $options in
     u)
       strip_user_level="true"
@@ -116,6 +118,9 @@ while getopts :uq:A:j:khD options ; do
       ;;
     D)
       debug_mode="true"
+      ;;
+    n)
+      submit="false"
       ;;
     h)
       usage
@@ -342,17 +347,21 @@ debug "Content:"
 debug "$(cat "$submitfile")"
 debug "" 
 
-case "${queue_cmd##*/}" in
-  sbatch)
-    message "$( "$queue_cmd" "$submitfile" )"
-    ;;
-  bsub)
-    message "$( "$queue_cmd" < "$submitfile" )"
-    ;; 
-  *)
-    fatal "Not recognised command: ${queue_cmd##*/}."
-    ;;
-esac
+if [[ $submit == "false" ]] ; then
+  message "Job not submitted per user request."
+else
+  case "${queue_cmd##*/}" in
+    sbatch)
+      message "$( "$queue_cmd" "$submitfile" )"
+      ;;
+    bsub)
+      message "$( "$queue_cmd" < "$submitfile" )"
+      ;; 
+    *)
+      fatal "Not recognised command: ${queue_cmd##*/}."
+      ;;
+  esac
+fi
 
 if [[ $clean_script == "delete" ]] ; then
   debug "$(rm -v "$submitfile")"
