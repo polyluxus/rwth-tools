@@ -20,7 +20,7 @@ usage ()
     echo "  -k          Keep submission script."
     echo "  -n          Do not submit (dry run)."
     echo "  -D          Debug mode with (much) more information."
-    echo "INFO:  [ ___version___: 2019-06-24-1724 ]"
+    echo "INFO:  [ ___version___: 2019-09-03-1914 ]"
   } >&2
   exit 0
 }
