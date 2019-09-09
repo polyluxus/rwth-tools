@@ -37,7 +37,7 @@ seff_cmd="${seff_cmd:-seff}"
 
 OPTIND=1
 
-while getopts :f:Fmeh options ; do
+while getopts :f:FmeEh options ; do
   #hlp Options:
   case $options in
     #hlp      -f <ARG>     Show different fields than coded within this script.
@@ -70,8 +70,8 @@ while getopts :f:Fmeh options ; do
     #hlp      -E           Exclude the output of the efficiency script (seff)
     #hlp                   (Overwrite configuration settings and -e switch.)
     #hlp
-    e)
-      include_seff="true"
+    E)
+      include_seff="false"
       ;;
 
     #hlp      -h           Show this help file and exit.  
