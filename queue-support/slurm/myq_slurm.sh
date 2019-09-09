@@ -93,7 +93,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-06-24-1724
+#hlp  ___version___: 2019-09-09-1805
 
 if [[ -n $long_format_jobids ]] ; then
   number_jobs=0
