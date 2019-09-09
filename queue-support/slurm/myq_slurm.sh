@@ -137,6 +137,7 @@ declare -- show_user="${show_user:-$USER}"
 call_queue ()
 {
   local queue_opts=( "$@" )
+  local count_jobs=0
   # If remaining width is smaller display of dir is turned off
   if (( width_remain > 19 )) ; then
     local truncator=" […] "
@@ -144,6 +145,7 @@ call_queue ()
     (( truncated_width-- ))
   fi
   while read -r line || [[ -n "$line" ]] ; do
+    (( count_jobs++ ))
     if (( ${#line} < width_total )) ; then
       echo "$line"
       continue
@@ -161,7 +163,7 @@ call_queue ()
       fi
     fi
   done < <($queue_cmd "${queue_opts[@]}")
-  echo ""
+  printf 'Total number of jobs: %4d\n\n' "$(( count_jobs - 1 ))"
 }
 
 queue_output_common=""
