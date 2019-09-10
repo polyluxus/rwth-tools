@@ -7,5 +7,6 @@
 **.tmp
 tmp.**
 core.**
+**.deprecated
 # RWTH-tools
 # ___version___: 2019-09-09-1920
