@@ -1,4 +1,6 @@
 #!/bin/env bash
+# From rwth-tools
+# ___version___: 2019-09-10-0000
 
 ###
 #
