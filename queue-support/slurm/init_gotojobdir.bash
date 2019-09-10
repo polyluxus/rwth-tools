@@ -1,6 +1,28 @@
 #!/bin/bash
 # ___version___: 2019-09-09-1920
 
+###
+#
+# init_gotojobdir.bash -- 
+#   an initialisation script to make the 'gotojobdir' command available
+#   it retrieves the working diretory of a batch job based on the job ID
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
+
 if (return 0 2>/dev/null) ; then
   # [How to detect if a script is being sourced](https://stackoverflow.com/a/28776166/3180795)
   : # Script is suorced, everything is fine
