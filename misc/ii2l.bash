@@ -161,7 +161,7 @@ exitstatus=0
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
   echo "Options: -c (configure); 'test' (dryrun)."
-  echo "___version___: 2019-08-22-1746"
+  echo "___version___: 2019-09-10-1026"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure

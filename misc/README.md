@@ -62,4 +62,4 @@ See [LICENSE](../../LICENSE) to see the full text.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-___version___: 2019-08-22-1746
+___version___: 2019-09-10-1026

@@ -47,7 +47,7 @@ usage ()
     echo "            please see the license file distributed alongside this repository,"
     echo "            which is available when you type '${0##*/} license',"
     echo "            or at <https://github.com/polyluxus/rwth-tools>."
-    echo "INFO:       [ ___version___: 2019-09-03-1914 ]"
+    echo "INFO:       [ ___version___: 2019-09-10-1026 ]"
   } >&2
   exit 0
 }
