@@ -15,4 +15,4 @@ especially the [tools for g16](https://github.com/polyluxus/tools-for-g16.bash) 
 - Transition state search
 - Commonly encountered error messages (and how to fix them)
 
-___version___: 2019-06-24-1724
+___version___: 2019-09-10-1348
