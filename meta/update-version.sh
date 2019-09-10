@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts :htf options ; do
+while getopts :htfV: options ; do
   case $options in
     h)
       echo "This script fetches remote repository, checks local changes, and updates the version in those files."
@@ -15,6 +15,11 @@ while getopts :htf options ; do
     f)
       echo "Forcing update of all version numbers." 
       force_update=true
+      ;;
+    V)
+      [[ $OPTARG =~ ^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}-[[:digit:]]{4}$ ]] || { echo "Unrecognised version format." ; exit 1 ; }
+      echo "Forcing version number '$OPTARG'."
+      insert_version="$OPTARG"
       ;;
     \?)
       echo "Invalid option: -$OPTARG"
@@ -85,7 +90,7 @@ update_file ()
   printf '%s "%s" ... ' "$update_text" "$display_git_root/$1"
   if [[ "$testrun" == "true" ]] ; then
     printf '\n  Setting: %s \n' \
-      "$(sed -n "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/p" "$1")"
+      "$(sed -n "s/___version___:\\([[:space:]]\\+\\)[[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___:\\1$insert_version/p" "$1")"
   else
     sed -i "s/___version___: [[:digit:]]\\{4\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{2\\}-[[:digit:]]\\{4\\}/___version___: $insert_version/" "$1"
     printf 'done.\n'
@@ -119,7 +124,7 @@ update_directory ()
 git fetch
 git_root=$( git rev-parse --show-toplevel )
 git_branch=$( git rev-parse --abbrev-ref HEAD )
-insert_version=$( date '+%Y-%m-%d-%H%M' )
+insert_version=${insert_version:-$( date '+%Y-%m-%d-%H%M' )}
 
 update_directory "$git_root"
 
