@@ -1,5 +1,26 @@
 #!/bin/bash
 
+###
+#
+# myq_slurm.sh --
+#   a wrapper to the squeue command of the slurm queueing system
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
+
 if ! command -v squeue &> /dev/null ; then
   echo "This script is a wrapper to 'squeue', but the command was not found."
   exit 1
@@ -17,6 +38,25 @@ fi
 #hlp   '$HOME/.myslurmrc' 
 #hlp   '$HOME/.config/myslurm.rc' (loaded last, i.e. superior)
 #hlp
+#hlp License: 
+#hlp   myq_slurm.sh  Copyright (C) 2019  Martin C Schwarzer
+#hlp   This program comes with ABSOLUTELY NO WARRANTY; this is free software,
+#hlp   and you are welcome to redistribute it under certain conditions;
+#hlp   please see the license file distributed alongside this repository,
+#hlp   which is available when you type '${0##*/} license',
+#hlp   or at <https://github.com/polyluxus/rwth-tools>.
+#hlp
+
+if [[ "$1" =~ ^[Ll][Ii][Cc][Ee][Nn][Ss][Ee]$ ]] ; then
+  command -v curl &> /dev/null || fatal "Command 'curl' not found, but it is necessary to obtain the license."
+  if command -v less &> /dev/null ; then
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE | less
+  else
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE
+  fi
+  echo "Displayed license and will exit."
+  exit 0
+fi
 
 # Source a global configuration
 #shellcheck source=myslurm.rc
@@ -93,7 +133,7 @@ done
 shift $(( OPTIND - 1 ))
 
 #hlp
-#hlp  ___version___: 2019-06-24-1724
+#hlp  ___version___: 2019-09-10-1348
 
 if [[ -n $long_format_jobids ]] ; then
   number_jobs=0
@@ -137,6 +177,7 @@ declare -- show_user="${show_user:-$USER}"
 call_queue ()
 {
   local queue_opts=( "$@" )
+  local count_jobs=0
   # If remaining width is smaller display of dir is turned off
   if (( width_remain > 19 )) ; then
     local truncator=" […] "
@@ -144,6 +185,7 @@ call_queue ()
     (( truncated_width-- ))
   fi
   while read -r line || [[ -n "$line" ]] ; do
+    (( count_jobs++ ))
     if (( ${#line} < width_total )) ; then
       echo "$line"
       continue
@@ -161,7 +203,7 @@ call_queue ()
       fi
     fi
   done < <($queue_cmd "${queue_opts[@]}")
-  echo ""
+  printf 'Total number of jobs: %4d\n\n' "$(( count_jobs - 1 ))"
 }
 
 queue_output_common=""

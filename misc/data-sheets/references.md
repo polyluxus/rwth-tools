@@ -6,4 +6,4 @@ This is a work in progress. In the meantime, you can read the following article:
 The subdirectory `src/references` currently only contains a truncated biblatex database.
 
 
-___version___: 2019-06-24-1724
+___version___: 2019-09-10-1348

@@ -1,5 +1,26 @@
 #!/bin/bash
 
+###
+#
+# myq_slurm.sh --
+#   a wrapper to the squeue command of the slurm queueing system
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
+
 if ! command -v sacct &> /dev/null ; then
   echo "This script is a wrapper to 'sacct', but the command was not found."
   exit 1
@@ -23,6 +44,25 @@ include_seff="false"
 #hlp   '$HOME/.myslurmrc' 
 #hlp   '$HOME/.config/myslurm.rc' (loaded last, i.e. superior)
 #hlp
+#hlp License: 
+#hlp   myq_slurm.sh  Copyright (C) 2019  Martin C Schwarzer
+#hlp   This program comes with ABSOLUTELY NO WARRANTY; this is free software,
+#hlp   and you are welcome to redistribute it under certain conditions;
+#hlp   please see the license file distributed alongside this repository,
+#hlp   which is available when you type '${0##*/} license',
+#hlp   or at <https://github.com/polyluxus/rwth-tools>.
+#hlp
+
+if [[ "$1" =~ ^[Ll][Ii][Cc][Ee][Nn][Ss][Ee]$ ]] ; then
+  command -v curl &> /dev/null || fatal "Command 'curl' not found, but it is necessary to obtain the license."
+  if command -v less &> /dev/null ; then
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE | less
+  else
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE
+  fi
+  echo "Displayed license and will exit."
+  exit 0
+fi
 
 # Source a global configuration
 #shellcheck source=myslurm.rc
@@ -37,7 +77,7 @@ seff_cmd="${seff_cmd:-seff}"
 
 OPTIND=1
 
-while getopts :f:Fmeh options ; do
+while getopts :f:FmeEh options ; do
   #hlp Options:
   case $options in
     #hlp      -f <ARG>     Show different fields than coded within this script.
@@ -70,8 +110,8 @@ while getopts :f:Fmeh options ; do
     #hlp      -E           Exclude the output of the efficiency script (seff)
     #hlp                   (Overwrite configuration settings and -e switch.)
     #hlp
-    e)
-      include_seff="true"
+    E)
+      include_seff="false"
       ;;
 
     #hlp      -h           Show this help file and exit.  
@@ -94,7 +134,7 @@ while getopts :f:Fmeh options ; do
   esac
 done
 #hlp
-#hlp  ___version___: 2019-06-24-1724
+#hlp  ___version___: 2019-09-10-1348
 
 
 shift $(( OPTIND - 1 ))

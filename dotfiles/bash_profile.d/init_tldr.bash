@@ -1,5 +1,5 @@
 #!/bin/bash
-#___version___: 2019-06-24-1724
+#___version___: 2019-08-27-1732
 
 if (return 0 2>/dev/null) ; then
   # [How to detect if a script is being sourced](https://stackoverflow.com/a/28776166/3180795)
@@ -8,6 +8,9 @@ else
   echo "This script is only meant to be sourced."
   exit 0
 fi
+
+# Only do that for bash
+[[ "$SHELL" =~ [Bb][Aa][Ss][Hh] ]] || return
 
 # Check if tldr is installed
 # add it to bash completition

@@ -1,7 +1,7 @@
 #!/bin/bash
 # 
 # Will be sourced by ~/.bashrc of this package
-# ___version___: 2019-06-24-1724
+# ___version___: 2019-09-10-1348
 
 # Get settings for sciebo and define some functions to use it,
 # otherwise skip it

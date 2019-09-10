@@ -1,25 +1,53 @@
 #!/bin/env bash
 
+###
+#
+# rwth-compress.sh -- 
+#   a script to submit a archiving job to the slurm queuing system
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
+
 usage ()
 {
   local scriptname="${0##*/}"
   {
-    echo "USAGE: $scriptname [opt] <target_(base)_filename> <source_directory>"
-    echo "INFO:  $scriptname will write a bash script to be submitted to a scheduler."
-    echo "MODUS: The script tries to guess from the extension which action to use;"
-    echo "       where it will default to first create a tar archive and use zstd to compress it."
-    echo "       (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)"
-    echo "OPTION:"
-    echo "  -u          Strip user level from source directory."
-    echo "              Try to change to user level directory before archive creation."
-    echo "  -q <ARG>    Use <ARG> as queueing system."
-    echo "              (Currently supported: slurm [default], busb)"
-    echo "  -A <ARG>    Account to use."
-    echo "  -j <ARG>    Wait for JobID <ARG>."
-    echo "              Can be specified multiple times. Only available for SLURM."
-    echo "  -k          Keep submission script."
-    echo "  -D          Debug mode with (much) more information."
-    echo "INFO:  [ ___version___: 2019-06-24-1724 ]"
+    echo "USAGE:      $scriptname [opt] <target_(base)_filename> <source_directory>"
+    echo "INFO:       $scriptname will write a bash script to be submitted to a scheduler."
+    echo "MODUS:      The script tries to guess from the extension which action to use;"
+    echo "            where it will default to first create a tar archive and use zstd to compress it."
+    echo "            (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)"
+    echo "OPTIONS:"
+    echo "  -u        Strip user level from source directory."
+    echo "            Try to change to user level directory before archive creation."
+    echo "  -q <ARG>  Use <ARG> as queueing system."
+    echo "            (Currently supported: slurm [default], busb)"
+    echo "  -A <ARG>  Account to use."
+    echo "  -j <ARG>  Wait for JobID <ARG>."
+    echo "            Can be specified multiple times. Only available for SLURM."
+    echo "  -k        Keep submission script."
+    echo "  -n        Do not submit (dry run)."
+    echo "  -D        Debug mode with (much) more information."
+    echo "LICENSE:    rwth-compress.sh  Copyright (C) 2019  Martin C Schwarzer"
+    echo "            This program comes with ABSOLUTELY NO WARRANTY; this is free software,"
+    echo "            and you are welcome to redistribute it under certain conditions;"
+    echo "            please see the license file distributed alongside this repository,"
+    echo "            which is available when you type '${0##*/} license',"
+    echo "            or at <https://github.com/polyluxus/rwth-tools>."
+    echo "INFO:       [ ___version___: 2019-09-10-1348 ]"
   } >&2
   exit 0
 }
@@ -86,14 +114,26 @@ if [[ ! "$HOSTNAME" =~ [Rr][Ww][Tt][Hh] ]] ; then
   debug "It might not work on $HOSTNAME."
 fi
 
+if [[ "$1" =~ ^[Ll][Ii][Cc][Ee][Nn][Ss][Ee]$ ]] ; then
+  command -v curl &> /dev/null || fatal "Command 'curl' not found, but it is necessary to obtain the license."
+  if command -v less &> /dev/null ; then
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE | less
+  else
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE
+  fi
+  message "Displayed license and will exit."
+  exit 0
+fi
+
 OPTIND=1
 queue="slurm"
 debug_mode="false"
 clean_script="delete"
 strip_user_level="false"
 account="default"
+submit="true"
 
-while getopts :uq:A:j:khD options ; do
+while getopts :uq:A:j:knDh options ; do
   case $options in
     u)
       strip_user_level="true"
@@ -116,6 +156,9 @@ while getopts :uq:A:j:khD options ; do
       ;;
     D)
       debug_mode="true"
+      ;;
+    n)
+      submit="false"
       ;;
     h)
       usage
@@ -342,17 +385,21 @@ debug "Content:"
 debug "$(cat "$submitfile")"
 debug "" 
 
-case "${queue_cmd##*/}" in
-  sbatch)
-    message "$( "$queue_cmd" "$submitfile" )"
-    ;;
-  bsub)
-    message "$( "$queue_cmd" < "$submitfile" )"
-    ;; 
-  *)
-    fatal "Not recognised command: ${queue_cmd##*/}."
-    ;;
-esac
+if [[ $submit == "false" ]] ; then
+  message "Job not submitted per user request."
+else
+  case "${queue_cmd##*/}" in
+    sbatch)
+      message "$( "$queue_cmd" "$submitfile" )"
+      ;;
+    bsub)
+      message "$( "$queue_cmd" < "$submitfile" )"
+      ;; 
+    *)
+      fatal "Not recognised command: ${queue_cmd##*/}."
+      ;;
+  esac
+fi
 
 if [[ $clean_script == "delete" ]] ; then
   debug "$(rm -v "$submitfile")"

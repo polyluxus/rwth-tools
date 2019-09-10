@@ -1,9 +1,47 @@
-#! /bin/bash
+#!/bin/bash
+
+###
+#
+# runJabRef.bash -- 
+#   a script to start JabRef, loading an appropriate environment first
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
 
 if [[ "$1" == -h ]] ; then
   echo "This script starts JabRef, being able to update first."
   echo "Usage: ${0##*/} [debug] [update] <jabref arguments>"
-  echo "___version___: 2019-06-24-1724"
+  echo "___version___: 2019-09-10-1348"
+  echo "License: runJabRef.bash  Copyright (C) 2019  Martin C Schwarzer"
+  echo "         This program comes with ABSOLUTELY NO WARRANTY; this is free software,"
+  echo "         and you are welcome to redistribute it under certain conditions;"
+  echo "         please see the license file distributed alongside this repository,"
+  echo "         which is available when you type '${0##*/} license',"
+  echo "         or at <https://github.com/polyluxus/rwth-tools>."
+  exit 0
+fi
+
+if [[ "$1" =~ ^[Ll][Ii][Cc][Ee][Nn][Ss][Ee]$ ]] ; then
+  command -v curl &> /dev/null || fatal "Command 'curl' not found, but it is necessary to obtain the license."
+  if command -v less &> /dev/null ; then
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE | less
+  else
+    curl --silent https://raw.githubusercontent.com/polyluxus/rwth-tools/master/LICENSE
+  fi
+  echo "Displayed license and will exit."
   exit 0
 fi
 

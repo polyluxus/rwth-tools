@@ -1,4 +1,26 @@
 #!/bin/bash
+
+###
+#
+# ii2l.bash -- Is it too late?
+#   a script to tell you whether it is too late to be on the console
+# Copyright (C) 2019 Martin C Schwarzer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+###
+
 # It is important to turn on extended globbing 
 # otherwise the configuration with the variables doesnt work
 if ! shopt -p extglob &> /dev/null ; then
@@ -139,7 +161,7 @@ exitstatus=0
 if [[ "$1" == "-h" ]] ; then
   echo "Checks if it is too late, or too early, or time for lunch." 
   echo "Options: -c (configure); 'test' (dryrun)."
-  echo "___version___: 2019-06-24-1724"
+  echo "___version___: 2019-09-10-1348"
   exit 0
 elif [[ "$1" == "-c" ]] ; then
   configure
