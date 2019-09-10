@@ -60,6 +60,6 @@ cp -vr -- "$HOME/local/rwth-tools/modules/modulefiles/source/pandoc" "$HOME/loca
 Check with `module avail` if the new module file is recognised.
 You should now be able to load it with `module load pandoc`.
 
-___version___: 2019-06-24-1724
+___version___: 2019-09-10-1500
 
 

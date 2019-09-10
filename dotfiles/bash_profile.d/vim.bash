@@ -1,5 +1,5 @@
 #!/bin/bash
-#___version___: 2019-08-27-1732
+#___version___: 2019-09-10-1500
 #
 # No bash, no alias
 [[ -z $BASH ]] && return 0

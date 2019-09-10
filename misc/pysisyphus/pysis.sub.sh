@@ -12,7 +12,7 @@ usage ()
   exit 0
   #hlp USAGE:       $scriptname [options] <pysisyphus-yaml>
   #hlp INFO:        $scriptname will write a bash script to be submitted to a scheduler for remote execution of 'pysis'.
-  #hlp              [ ___version___: 2019-06-24-1724 ]
+  #hlp              [ ___version___: 2019-09-10-1500 ]
   #hlp 
 }
 
