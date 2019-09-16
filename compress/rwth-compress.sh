@@ -30,6 +30,9 @@ usage ()
     echo "MODUS:      The script tries to guess from the extension which action to use;"
     echo "            where it will default to first create a tar archive and use zstd to compress it."
     echo "            (Currently supported: .tgz, .tar.gz, .tar.gzip, .tar.zstd [default]; WIP: .zip, .7z)"
+    echo "            (Experimental: .tar, .gz, .gzip, .z, .zstd )"
+    echo "            The batch file is written in a way, that it will exit on error to give you "
+    echo "            the opportunity to check the logfiles."
     echo "OPTIONS:"
     echo "  -u        Strip user level from source directory."
     echo "            Try to change to user level directory before archive creation."
@@ -184,103 +187,156 @@ case $1 in
     target_base_filename="${1%.*}" 
     target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
     execution_mode=tgz
+    debug "Will run in $execution_mode mode."
     ;;
   *.[Gg][Zz][Ii][Pp] | *.[Gg][Zz] | *.[Zz] )
     target_base_filename="${1%.*}"
     if [[ $target_base_filename =~ [Tt][Aa][Rr]$ ]] ; then
       target_tar_filename=$(is_readable_file "$target_base_filename") && fatal "File exists ($target_tar_filename)."
       target_base_filename="${target_tar_filename%.*}"
-      execution_mode=tgz
+      execution_mode=targzip
+    else
+      target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
+      execution_mode=gzip
     fi
-    target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
-    execution_mode=gzip
+    debug "Will run in $execution_mode mode."
     ;;
   *.[Zz][Ii][Pp] )
     fatal "Not yet implemented."
     target_base_filename="${1%.*}"
     execution_mode=zip
+    debug "Will run in $execution_mode mode."
     ;;
-  *.[Zz][Ss][Tt][Dd] )
+  *.[Zz][Ss][Tt][Dd]? )
     target_base_filename="${1%.*}"
     if [[ $target_base_filename =~ [Tt][Aa][Rr]$ ]] ; then
       target_tar_filename=$(is_readable_file "$target_base_filename") && fatal "File exists ($target_tar_filename)."
       target_base_filename="${target_tar_filename%.*}"
+    else
+      target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
+      execution_mode=zstd
     fi
-    target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
-    execution_mode=zstd
+    debug "Will run in $execution_mode mode."
     ;;
   *.7[Zz] )
     fatal "Not yet implemented."
     target_base_filename="${1%.*}"
     execution_mode=seven
+    debug "Will run in $execution_mode mode."
     ;;
-  *.[Tt][Aa][Rr].[Zz][Ss][Tt][Dd] )
+  *.[Tt][Aa][Rr].[Zz][Ss][Tt][Dd]? )
     target_base_filename="${1%.*.*}"
     target_tar_filename=$(is_readable_file "${1%.*}") && fatal "File exists ($target_tar_filename)."
     target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
     execution_mode=zstd
+    debug "Will run in $execution_mode mode."
     ;;
   *.[Tt][Aa][Rr].[Gg][Zz] | *.[Tt][Aa][Rr].[Gg][Zz][Ii][Pp] )
     target_base_filename="${1%.*.*}"
     target_tar_filename=$(is_readable_file "${1%.*}") && fatal "File exists ($target_tar_filename)."
     target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
     execution_mode=tgz
+    debug "Will run in $execution_mode mode."
     ;;
   *.[Tt][Aa][Rr] )
     target_base_filename="${1%.*}"
     target_tar_filename=$(is_readable_file "$1") && fatal "File exists ($target_tar_filename)."
-    execution_mode=zstd
+    execution_mode=tar
+    debug "Will run in $execution_mode mode."
     ;;
   *)
     target_base_filename="$1"
     execution_mode=zstd
+    debug "Will run in $execution_mode mode."
 esac
+
+# Check the files
+
+if source_directory=$(is_readable_directory "$2") ; then
+  debug "Found readable directory ($source_directory)."
+elif source_tar_filename=$(is_readable_file "$2") ; then
+  debug "Found readable file, skipping tar."
+  unset source_directory
+  debug "source_directory='$source_directory'; source_tar_filename='$source_tar_filename'"
+  if [[ "$execution_mode" == tgz ]] || [[ "$execution_mode" == targzip ]] ; then 
+    execution_mode=gzip
+    debug "Resetting to $execution_mode mode."
+    [[ -n $target_zip_filename ]] && target_zip_filename="${target_zip_filename%.*}.gz"
+    debug "Target file name: '$target_zip_filename'."
+  fi
+else
+  fatal "Directory or file does not exist ($2)."
+fi
+usename="${source_directory//\//%}"
 
 # Checks for commands
 
 case "$execution_mode" in
-  default | zstd )
+  default | tar )
     tar_cmd=$(command -v tar) || fatal "Comand not found (tar)."
     # Additional checks for filenames
     if [[ -z $target_tar_filename ]] ; then
-      target_tar_filename=$(is_readable_file "$target_base_filename.tar") && fatal "File exists ($target_tar_filename)."
+      target_tar_filename=$(is_readable_file "${target_base_filename}.tar") && fatal "File exists ($target_tar_filename)."
     fi
+    ;;&
+  default | zstd )
     zstd_cmd=$(command -v zstd) || fatal "Comand not found (zstd)."
     if [[ -z $target_zip_filename ]] ; then
-      target_zip_filename=$(is_readable_file "$target_tar_filename.zstd") && fatal "File exists ($target_zip_filename)."
+      target_zip_filename=$(is_readable_file "${target_tar_filename:-$source_tar_filename}.zst") && fatal "File exists ($target_zip_filename)."
     fi
     ;;
-  tgz)
+  tgz | targzip )
     tar_cmd=$(command -v tar) || fatal "Comand not found (tar)."
     # Will not be performed with separate steps.
     # gzip_cmd=$(command -v gzip) || fatal "Comand not found (gzip)."
     if [[ -z $target_zip_filename ]] ; then
-      target_zip_filename=$(is_readable_file "$target_base_filename.tgz") && fatal "File exists ($target_zip_filename)."
+      target_zip_filename=$(is_readable_file "${target_base_filename}.tgz") && fatal "File exists ($target_zip_filename)."
     fi
     ;;
-  gzip)
+  gzip )
     # not fully implemented
     gzip_cmd=$(command -v gzip) || fatal "Comand not found (gzip)."
+    if [[ -z $target_zip_filename ]] ; then
+      target_zip_filename=$(is_readable_file "${target_tar_filename:-$source_tar_filename}.zst") && fatal "File exists ($target_zip_filename)."
+    fi
+    debug '----------------------'
     ;;
-  seven)
+  seven )
     # not fully implemented
     seven_cmd=$(command -v 7z) || fatal "Comand not found (7z)."
+    if [[ -z $target_zip_filename ]] ; then
+      target_zip_filename=$(is_readable_file "${target_tar_filename:-$source_tar_filename}.zst") && fatal "File exists ($target_zip_filename)."
+    fi
     ;;
-  zip)
+  zip )
     # not fully implemented
     zip_cmd=$(command -v zip) || fatal "Comand not found (zip)."
+    if [[ -z $target_zip_filename ]] ; then
+      target_zip_filename=$(is_readable_file "${target_tar_filename:-$source_tar_filename}.zst") && fatal "File exists ($target_zip_filename)."
+    fi
+    ;;
+  default | tar | zstd | tgz | targzip | gzip | seven | zip )
+    # Fallthrough catch (for tar)
+    debug "Will run in $execution_mode mode."
     ;;
   *)
     fatal "Unrecognised execution mode"
     ;;
 esac
 
-source_directory=$(is_readable_directory "$2") || fatal "Directory does not exist ($2)."
-usename="${source_directory//\//%}"
-
 if [[ "$strip_user_level" == "true" ]] ; then
-  strip_user_directory="${source_directory%%/${USER}*}/$USER"
-  cleaned_source_directory="${source_directory##$strip_user_directory/}"
+  strip_user_directory_base="${source_directory%%/${USER}*}"
+  if [[ "$strip_user_directory_base" == "$source_directory" ]] ; then
+    message "Atempt to strip user directory (of $USER) failed;"
+    message "pattern not found in '$source_directory'."
+    unset strip_user_directory
+    strip_user_level=false
+  else
+    strip_user_directory="${strip_user_directory_base}/$USER"
+    cleaned_source_directory="${source_directory##$strip_user_directory/}"
+    debug "Stripping '$strip_user_level'."
+    debug "Source is now: $cleaned_source_directory"
+  fi
 else
   debug "Not stripping user level directory."
 fi
@@ -365,20 +421,21 @@ fi
 
 if [[ "$execution_mode" == "tgz" ]] ; then
   if [[ "$strip_user_level" == "true" ]] ; then
-    echo "'$tar_cmd' -v -czf '$target_zip_filename' -C '$strip_user_directory' '$cleaned_source_directory' 2>&1 || exit 65"  >> "$submitfile"
+    echo "'$tar_cmd' -v -czf '$target_zip_filename' -C '$strip_user_directory' '$cleaned_source_directory' || exit 65"  >> "$submitfile"
   else
-    echo "'$tar_cmd' -v -czf '$target_zip_filename' '$source_directory' 2>&1 || exit 66"  >> "$submitfile"
+    echo "'$tar_cmd' -v -czf '$target_zip_filename' '$source_directory' || exit 66"  >> "$submitfile"
   fi
 else
   if [[ "$strip_user_level" == "true" ]] ; then
-    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename' -C '$strip_user_directory' '$cleaned_source_directory' 2>&1 || exit 62"  >> "$submitfile"
+    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename' -C '$strip_user_directory' '$cleaned_source_directory' || exit 62"  >> "$submitfile"
   else
-    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename'    '$source_directory'    2>&1 || exit 63"  >> "$submitfile"
+    [[ -n $tar_cmd ]] && echo "'$tar_cmd'  -v -cf  '$target_tar_filename'    '$source_directory'     || exit 63"  >> "$submitfile"
   fi
-  [[ -n $zstd_cmd ]]  && echo "'$zstd_cmd' -v -9   '$target_tar_filename' -o '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
-  [[ -n $gzip_cmd ]]  && echo "'$gzip_cmd' -v -9 < '$target_tar_filename' >  '$target_zip_filename' 2>&1 || exit 127" >> "$submitfile"
-  [[ -n $seven_cmd ]] && echo "'$seven_cmd' a -bb3 '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
-  [[ -n $zip_cmd ]]   && echo "'$zip_cmd'     -9   '$target_zip_filename'    '$target_tar_filename' 2>&1 || exit 127" >> "$submitfile"
+  target_tar_filename="${target_tar_filename:-$source_tar_filename}"
+  [[ -n $zstd_cmd ]]  && echo "'$zstd_cmd' -v -9   '$target_tar_filename' -o '$target_zip_filename'  || exit 127" >> "$submitfile"
+  [[ -n $gzip_cmd ]]  && echo "'$gzip_cmd' -v -9 < '$target_tar_filename' >  '$target_zip_filename'  || exit 127" >> "$submitfile"
+  [[ -n $seven_cmd ]] && echo "'$seven_cmd' a -bb3 '$target_zip_filename'    '$target_tar_filename'  || exit 127" >> "$submitfile"
+  [[ -n $zip_cmd ]]   && echo "'$zip_cmd'     -9   '$target_zip_filename'    '$target_tar_filename'  || exit 127" >> "$submitfile"
 fi
 
 debug "Content:"
