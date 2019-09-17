@@ -81,4 +81,4 @@ at *T* = 298.15 K and *p* = 1 atm, calculated with Gaussian 16 Rev. B.01 and def
 |                   |                    |                   |             |             |
 
 
-___version___: 2019-09-10-1500
+___version___: 2019-09-17-1200

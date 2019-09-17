@@ -2,7 +2,7 @@
 #
 # This file sets environment variables for the sync_sciebo function
 # defined in dot.bash_functions of this repository.
-# ___version___: 2019-09-10-1500
+# ___version___: 2019-09-17-1200
 
 # If this script is not sourced, return before executing anything
 if (( ${#BASH_SOURCE[*]} == 1 )) ; then

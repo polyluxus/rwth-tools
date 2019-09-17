@@ -309,4 +309,4 @@ The [results](exercises/protonation.md) are available for comparison, along with
    There are some other formats recognised, but that is also something for another day.
 
 
-___version___: 2019-09-10-1500
+___version___: 2019-09-17-1200

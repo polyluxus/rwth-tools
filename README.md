@@ -9,6 +9,15 @@ This probably goes without saying, but here we go anyway:
 There is also absolutely no warranty in any case (see below and [LICENSE](LICENSE)). 
 If you decide to use any of the scripts or files, it is entirely your resonsibility.
 
+## End of Support
+
+As of today, 17th September 2019, 
+the content within this repository will no longer be updated and/ or maintained by me.
+I welcome everyone finding this repository useful to fork and modify their own version.
+If there are crucial bugs, that other people should know about,
+please log them via the [Github issue tracker](https://github.com/polyluxus/rwth-tools/issues).
+
+
 ## License (GNU General Public License v3.0)
 
 rwth-tools - a collection of scripts for CLAIX18  
@@ -29,4 +38,4 @@ See [LICENSE](LICENSE) to see the full text.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-___version___: 2019-09-17-0944
+___version___: 2019-09-17-1200

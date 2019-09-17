@@ -24,7 +24,7 @@
 if [[ "$1" == -h ]] ; then
   echo "This script starts JabRef, being able to update first."
   echo "Usage: ${0##*/} [debug] [update] <jabref arguments>"
-  echo "___version___: 2019-09-10-1500"
+  echo "___version___: 2019-09-17-1200"
   echo "License: runJabRef.bash  Copyright (C) 2019  Martin C Schwarzer"
   echo "         This program comes with ABSOLUTELY NO WARRANTY; this is free software,"
   echo "         and you are welcome to redistribute it under certain conditions;"
