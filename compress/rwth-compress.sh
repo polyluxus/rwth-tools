@@ -212,6 +212,7 @@ case $1 in
     if [[ $target_base_filename =~ [Tt][Aa][Rr]$ ]] ; then
       target_tar_filename=$(is_readable_file "$target_base_filename") && fatal "File exists ($target_tar_filename)."
       target_base_filename="${target_tar_filename%.*}"
+      execution_mode=default
     else
       target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
       execution_mode=zstd
@@ -228,7 +229,7 @@ case $1 in
     target_base_filename="${1%.*.*}"
     target_tar_filename=$(is_readable_file "${1%.*}") && fatal "File exists ($target_tar_filename)."
     target_zip_filename=$(is_readable_file "$1") && fatal "File exists ($target_zip_filename)."
-    execution_mode=zstd
+    execution_mode=default
     debug "Will run in $execution_mode mode."
     ;;
   *.[Tt][Aa][Rr].[Gg][Zz] | *.[Tt][Aa][Rr].[Gg][Zz][Ii][Pp] )
@@ -246,7 +247,7 @@ case $1 in
     ;;
   *)
     target_base_filename="$1"
-    execution_mode=zstd
+    execution_mode=default
     debug "Will run in $execution_mode mode."
 esac
 
