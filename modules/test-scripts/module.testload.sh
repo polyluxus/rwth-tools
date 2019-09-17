@@ -1,7 +1,7 @@
 #!/bin/bash
 #shellcheck disable=SC2059
 
-# ___version___: 2019-09-10-1500
+# ___version___: 2019-09-17-1200
 
 if [[ "$1" == "-h" ]] ; then
   echo "This script tests whether a set of modules can be loaded."

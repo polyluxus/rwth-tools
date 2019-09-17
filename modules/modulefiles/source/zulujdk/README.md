@@ -80,5 +80,5 @@ cp -vr -- "$HOME/local/rwth-tools/modules/modulefiles/source/zulujdk" "$HOME/loc
 Check with `module avail` if the new module file is recognised.
 You should now be able to load it with `module load zulujdk`.
 
-___version___: 2019-09-10-1500
+___version___: 2019-09-17-1200
 

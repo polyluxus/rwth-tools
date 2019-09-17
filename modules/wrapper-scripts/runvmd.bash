@@ -1,6 +1,6 @@
 #!/bin/bash
 # This is a simple wrapper to start VMD
-#___version___: 2019-09-10-1500
+#___version___: 2019-09-17-1200
 
 if [[ $HOSTNAME =~ [Rr][Ww][Tt][Hh] ]] ; then
   echo "Running on $HOSTNAME." >&2

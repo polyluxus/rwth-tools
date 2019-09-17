@@ -1,6 +1,6 @@
 #!/bin/bash
 # Needs an installation of orca and a modulefile from this repository
-#___version___: 2019-09-10-1500
+#___version___: 2019-09-17-1200
 
 #hlp +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #hlp +++                Wrapper      to      call      orca_plot                 +++
