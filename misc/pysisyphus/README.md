@@ -5,7 +5,7 @@ This directory contains a submit script for
 
 ## Prerequisites
 
-This installation needs pysisiphus and slurm and all dependencies thereof.
+This installation needs pysisyphus and slurm and all dependencies thereof.
 
 It is highly recommended (but not necessary) to have a virtual environment
 and load modules for the used quantum chemistry packages.
@@ -19,7 +19,7 @@ and load modules for the used quantum chemistry packages.
 ## Setting up pysisyphus on CLAIX18
 
 Thanks to the IT department, you can on CLAIX18 use a modern version of python right out of the box.
-At the time of writing, this was [Python 3.7.3](https://www.python.org/downloads/release/python-373/).
+At the time of writing, this was [Python 3.9.6](https://www.python.org/downloads/release/python-396/).
 You can check the available verions with
 ```
 modules avail
@@ -29,7 +29,7 @@ The python modules are located within the `DEVELOP` submodule, so be sure to hav
 which it should be at startup.
 Now you can load the python module:
 ```
-module load python/3.7.3
+module load python/3.9.6
 ```
 Check that you are actually using the correct version, 
 as the principle binary may still point to another version:
@@ -40,24 +40,24 @@ If you get something like `Python 2.7.5`, then try explicitly:
 ```
 python3 --version
 ```
-In this example it should now say `Python 3.7.3`.
+In this example it should now say `Python 3.9.6`.
 
 I recommend creating local (or virtual) environments for the use with pysisyphus.
 Therefore I have made a directory where to store these.
 I'll be using my setup as the example for this guide.
 Create the directory, if you have not already, and change to it:
 ```
-mkdir ~/local/python/local_env/
-cd ~/local/python/local_env/
+mkdir ~/local/python/
+cd ~/local/python/
 ```
-Now you can create the virtual environment `pysisiphus-p3.7.3-claix` with the following command:
+Now you can create the virtual environment `pysis-p3.9.6` with the following command:
 ```
-python3 -m venv pysisiphus-p3.7.3-claix
+python3 -m venv pysis-p3.9.6
 ```
 This will create a new directory of the same name in the current location.
 In order to activate this environment, you have to source the activation script:
 ```
-. ~/local/python/local_env/pysisiphus-p3.7.3-claix/bin/activate
+. ~/local/python/pysis-p3.9.6/bin/activate
 ```
 The path to this script should also be set as `local_python_environment`
 in the `pysis.sub.rc` (see above).
@@ -74,20 +74,16 @@ This should create the repository `~/local/pysisyphus`, change to it:
 ```
 cd ~/local/pysisyphus
 ```
-To access the newest features, you can change to the development branch,
-but you can also use the current master snapshot.
+To access the newest features, you could change to the development branch,
+but it is recommended to use the current master snapshot.
 Please keep in mind that pysisyphus is in active development and currently
 not recommended for production work.
 Make sure to support the repository by reporting bugs,
 and check the manual and read-me/GitHub pages for the latest changes.
-Check out the development branch:
-```
-git checkout dev
-```
-Now you can set up pysisyphus with the following command,
+You can set up pysisyphus with the following command,
 which should install all necessary packages in the virtual environment.
 ```
-python3 setup.py develop
+pip install .
 ```
 After that, check whether it installed properly:
 ```
@@ -107,8 +103,9 @@ This requires to load the Gaussian and xtb modules (on CLAIX18 within `CHEMISTRY
 before using pysisyphus.
 In `pysis.sub.rc` (see above), this can be achieved by adding (editing) the following:
 ```
-use_modules=( "CHEMISTRY" "xtb" "gaussian/16.b01_bin" )
+use_modules=( "python/3.9.6" "CHEMISTRY" "xtb" "gaussian/16.b01_bin" )
 ```
+This assumes that `python` is not loaded on default, which is in fact default on CLAIX18.
 
 This should complete the set-up, and once you have updated the `pysis.sub.rc` (see above),
 you should be ready to use the software.
@@ -144,12 +141,10 @@ At the time of writing the following worked:
    ```
    cos:
     type: neb
-    climb: True
    opt:
     type: qm
     max_cycles: 10
     align: True
-    climb: True
    interpol:
     type: lst
     between: 10
@@ -158,7 +153,9 @@ At the time of writing the following worked:
     charge: 0
     mult: 1
     pal: 4
-   xyz: [ acetone.xyz, propenol.xyz ]
+   geom:
+    type: cart
+    fn: [ acetone.xyz, propenol.xyz ]
    ```
    Now you can run pysisyphus (interactive, i.e. you have to activate your virtual environment):
    ```
@@ -169,7 +166,7 @@ At the time of writing the following worked:
    A (often) reasonable guess to the transition state is called `splined_hei.xyz`.  
    Try running the following to see the convergence plotted:
    ```
-   pysisplot --energies
+   pysisplot --cosens
    ```
    
    Note that the above has done interactively. 
@@ -182,6 +179,10 @@ At the time of writing the following worked:
    This will essentially be handled already if you submit it with the script. 
    Then you can just go ahead and use your method of choice to find the transition state 
    and preform IRC calculations.
+
+5. All possible usecases of `pysisyphus` are summarized in the respective [documentation](https://pysisyphus.readthedocs.io/)
+
+6. ATTENTION: Currently the output format of the "cycle_*.trj" files is not formatted to work with molden. Will be fixed in the pysisyphus release 0.7.5.
  
- ___version___: 2019-09-17-1200
+ ___version___: 2022-02-23-0900
  
