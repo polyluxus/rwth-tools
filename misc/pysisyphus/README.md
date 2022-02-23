@@ -182,7 +182,5 @@ At the time of writing the following worked:
 
 5. All possible usecases of `pysisyphus` are summarized in the respective [documentation](https://pysisyphus.readthedocs.io/)
 
-6. ATTENTION: Currently the output format of the "cycle_*.trj" files is not formatted to work with molden. Will be fixed in the pysisyphus release 0.7.5.
- 
  ___version___: 2022-02-23-0900
  
