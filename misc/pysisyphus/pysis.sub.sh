@@ -209,7 +209,11 @@ fi
 
 # Then run pysisyphus.
 # Then create an archive with all data.
-# Then run the cleanup mode of pysisyphus.
+# Then run the cleanup mode of pysisyphus. With the new
+# pysisyphus release this will remove all files except 
+# log files. 
+
+KEEP_FILES="splined_hei.xyz pysis.log final_geometries.trj"
 cat >> "$submitfile" <<-END-of-body
 # Run pysisyphus
 echo "${wrapper:-srun} pysis '$input_yaml' > '$output_log'"
@@ -226,6 +230,10 @@ if command -v tar ; then
   tar -vczf "$PWD/${jobname}.data.tgz" .
   cycle_files=( cycle*.trj )
   cp -v -- "\${cycle_files[-1]}" "$PWD"
+  for FILE in $KEEP_FILES
+  do  
+    cp -v -- "\${FILE}" "$PWD"
+  done
   echo "Runing pysis --fclean"
   pysis --fclean
 fi
